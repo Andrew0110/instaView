@@ -8,14 +8,16 @@
 
 #import "SearchViewController.h"
 #import "UIImageView+AFNetworking.h"
-#import "ViewController.h"
+#import "RecentImagesViewController.h"
 #import "APIManager.h"
 #import "InstaUser.h"
 #import "SearchViewCell.h"
 
 
 
-@interface SearchViewController ()
+@interface SearchViewController () <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate>
+
+@property (nonatomic) SearchView* searchView;
 
 @property (nonatomic) NSArray *users;
 @property (nonatomic) APIManager *manager;
@@ -23,6 +25,10 @@
 @end
 
 @implementation SearchViewController
+
+static NSString * const kSearchCellIdentifier = @"SearchViewControllerCell";
+static NSUInteger const kCellHeight = 60;
+
 
 - (void) loadView {
     _searchView = [SearchView new];
@@ -44,27 +50,14 @@
     _searchView.searchBar.text = @"Andrew";
 
     _manager = [APIManager sharedManager];
-    [_manager setBaseURL:[NSURL URLWithString:@"https://api.instagram.com/v1/"]];
-    [_manager setAccessToken:@"2162679026.a5e3084.7892c75453b04d4bac276f8f7c08d461"];
 
-    [_manager searchForName:@"Andrew" withCompletion:^(NSArray *users) {
+    [_manager searchUsersWithName:@"Andrew" completion:^(NSArray *users) {
         _users = users;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.searchView.tableView reloadData];
-        });
-        
-        //NSLog(@"%@, %ld", mediaData.photoURL, (long)mediaData.likes);
+        [self.searchView.tableView reloadData];
     }];
-    
-
-//    [[UIBarButtonItem appearance] setBackButtonBackgroundImage: [[UIImage imageNamed:@"navbarBackBtn"]
-//                                                                 resizableImageWithCapInsets:UIEdgeInsetsZero
-//                                                                 resizingMode:UIImageResizingModeStretch]
-//                                                      forState:UIControlStateNormal
-//                                                    barMetrics:UIBarMetricsDefault];
-
-    
+    [self.searchView.tableView registerClass: [SearchViewCell class]
+                      forCellReuseIdentifier: kSearchCellIdentifier];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -73,27 +66,24 @@
     [self.navigationController setNavigationBarHidden:YES];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 50;
+    return kCellHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    ViewController* viewController = [[ViewController alloc] initWithUserId:((InstaUser*)_users[indexPath.row]).userID];
+    RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserId:((InstaUser*)_users[indexPath.row]).userID];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [_searchView.searchBar resignFirstResponder];
     
     [self.navigationController pushViewController:viewController animated:YES];
-
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [(SearchViewCell*)cell configureWithUser:self.users[indexPath.row]];
+}
 
 #pragma mark - UITableViewDataSource
 
@@ -102,26 +92,15 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString* cellIdentifier = @"Cell";
-    SearchViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-
+    SearchViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kSearchCellIdentifier forIndexPath:indexPath];
     
-    if (!cell) {
-        cell = [SearchViewCell new];
-    }
-    
-    [cell.portraitImageView setImageWithURL:((InstaUser*)_users[indexPath.row]).pictureProfile placeholderImage:[UIImage imageNamed:@"placeholder"]];
-    [cell.portraitImageView clipsToBounds];
-    
-    cell.label.text = ((InstaUser*)_users[indexPath.row]).username;
-
     return cell;
 }
 
 #pragma mark - UISearchBarDelegate
+
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
     [searchBar setShowsCancelButton:YES animated:YES];
-    [searchBar becomeFirstResponder];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
@@ -135,7 +114,7 @@
 
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    [_manager searchForName:searchBar.text withCompletion:^(NSArray *users) {
+    [_manager searchUsersWithName:searchBar.text completion:^(NSArray *users) {
         _users = users;
         
         dispatch_async(dispatch_get_main_queue(), ^{

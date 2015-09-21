@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "InstaUser.h"
 
 @interface SearchViewCell : UITableViewCell
 
-@property (nonatomic) UIImageView *portraitImageView;
-@property (nonatomic) UILabel *label;
+- (void)configureWithUser:(InstaUser *)aUser;
 
 @end

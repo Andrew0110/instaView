@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RootView : UIView
+@interface RecentImagesView : UIView
 
 @property (nonatomic) UITableView* tableView;
 

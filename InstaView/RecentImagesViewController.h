@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface RecentImagesViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 - (instancetype) initWithUserId:(NSString*) userID;
 

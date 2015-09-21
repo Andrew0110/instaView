@@ -10,6 +10,9 @@
 
 @implementation SearchView
 
+static NSInteger const kSearchBarHeight = 44;
+
+
 - (instancetype)init
 {
     self = [super init];
@@ -27,12 +30,14 @@
 }
 
 - (void) layoutSubviews {
-    CGFloat width = self.bounds.size.width;
-    CGFloat height = self.bounds.size.height;
+    [super layoutSubviews];
+    
+    const CGFloat width = self.bounds.size.width;
+    const CGFloat height = self.bounds.size.height;
+    
     CGFloat yOffset = 20;
     
-    
-    _searchBar.frame = CGRectMake(0, yOffset, width, 44);
+    _searchBar.frame = CGRectMake(0, yOffset, width, kSearchBarHeight);
     yOffset += CGRectGetHeight(_searchBar.frame);
     _tableView.frame = CGRectMake(0, yOffset, width, height-yOffset);
 }

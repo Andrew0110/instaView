@@ -13,11 +13,11 @@
 		1B58132D1BA9E5F80097EF41 /* SearchViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B58132C1BA9E5F80097EF41 /* SearchViewCell.m */; };
 		1BB9C6DD1B98971900957C11 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6DC1B98971900957C11 /* main.m */; };
 		1BB9C6E01B98971900957C11 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6DF1B98971900957C11 /* AppDelegate.m */; };
-		1BB9C6E31B98971900957C11 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6E21B98971900957C11 /* ViewController.m */; };
+		1BB9C6E31B98971900957C11 /* RecentImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6E21B98971900957C11 /* RecentImagesViewController.m */; };
 		1BB9C6E81B98971900957C11 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BB9C6E71B98971900957C11 /* Images.xcassets */; };
 		1BB9C6F71B98971900957C11 /* InstaViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6F61B98971900957C11 /* InstaViewTests.m */; };
 		1BB9C7021B98996D00957C11 /* InstagramPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C7011B98996D00957C11 /* InstagramPhotoCell.m */; };
-		1BB9C7051B989B0500957C11 /* RootView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C7041B989B0500957C11 /* RootView.m */; };
+		1BB9C7051B989B0500957C11 /* RecentImagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C7041B989B0500957C11 /* RecentImagesView.m */; };
 		1BB9C7081B9B07B200957C11 /* APIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C7071B9B07B200957C11 /* APIManager.m */; };
 		1BB9C70B1B9E143300957C11 /* MediaData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C70A1B9E143300957C11 /* MediaData.m */; };
 		1BB9C7341B9E278600957C11 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C7101B9E278600957C11 /* AFHTTPRequestOperation.m */; };
@@ -63,16 +63,16 @@
 		1BB9C6DC1B98971900957C11 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1BB9C6DE1B98971900957C11 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1BB9C6DF1B98971900957C11 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1BB9C6E11B98971900957C11 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		1BB9C6E21B98971900957C11 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1BB9C6E11B98971900957C11 /* RecentImagesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecentImagesViewController.h; sourceTree = "<group>"; };
+		1BB9C6E21B98971900957C11 /* RecentImagesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RecentImagesViewController.m; sourceTree = "<group>"; };
 		1BB9C6E71B98971900957C11 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1BB9C6F01B98971900957C11 /* InstaViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InstaViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BB9C6F51B98971900957C11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BB9C6F61B98971900957C11 /* InstaViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstaViewTests.m; sourceTree = "<group>"; };
 		1BB9C7001B98996D00957C11 /* InstagramPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstagramPhotoCell.h; sourceTree = "<group>"; };
 		1BB9C7011B98996D00957C11 /* InstagramPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstagramPhotoCell.m; sourceTree = "<group>"; };
-		1BB9C7031B989B0500957C11 /* RootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootView.h; sourceTree = "<group>"; };
-		1BB9C7041B989B0500957C11 /* RootView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootView.m; sourceTree = "<group>"; };
+		1BB9C7031B989B0500957C11 /* RecentImagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentImagesView.h; sourceTree = "<group>"; };
+		1BB9C7041B989B0500957C11 /* RecentImagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentImagesView.m; sourceTree = "<group>"; };
 		1BB9C7061B9B07B200957C11 /* APIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIManager.h; sourceTree = "<group>"; };
 		1BB9C7071B9B07B200957C11 /* APIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIManager.m; sourceTree = "<group>"; };
 		1BB9C7091B9E143300957C11 /* MediaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaData.h; sourceTree = "<group>"; };
@@ -146,6 +146,19 @@
 			name = Search;
 			sourceTree = "<group>";
 		};
+		1B69C6891BB03F220012DE62 /* RecentImages */ = {
+			isa = PBXGroup;
+			children = (
+				1BB9C6E11B98971900957C11 /* RecentImagesViewController.h */,
+				1BB9C6E21B98971900957C11 /* RecentImagesViewController.m */,
+				1BB9C7031B989B0500957C11 /* RecentImagesView.h */,
+				1BB9C7041B989B0500957C11 /* RecentImagesView.m */,
+				1BB9C7001B98996D00957C11 /* InstagramPhotoCell.h */,
+				1BB9C7011B98996D00957C11 /* InstagramPhotoCell.m */,
+			);
+			name = RecentImages;
+			sourceTree = "<group>";
+		};
 		1BB9C6CE1B98971800957C11 = {
 			isa = PBXGroup;
 			children = (
@@ -172,12 +185,7 @@
 				1BB9C6DE1B98971900957C11 /* AppDelegate.h */,
 				1BB9C6DF1B98971900957C11 /* AppDelegate.m */,
 				1B5813271BA895920097EF41 /* Search */,
-				1BB9C6E11B98971900957C11 /* ViewController.h */,
-				1BB9C6E21B98971900957C11 /* ViewController.m */,
-				1BB9C7031B989B0500957C11 /* RootView.h */,
-				1BB9C7041B989B0500957C11 /* RootView.m */,
-				1BB9C7001B98996D00957C11 /* InstagramPhotoCell.h */,
-				1BB9C7011B98996D00957C11 /* InstagramPhotoCell.m */,
+				1B69C6891BB03F220012DE62 /* RecentImages */,
 				1BB9C70D1B9E1D0400957C11 /* API */,
 				1BB9C70C1B9E1CEC00957C11 /* model */,
 				1BB9C6E71B98971900957C11 /* Images.xcassets */,
@@ -383,7 +391,7 @@
 				1BB9C7431B9E278600957C11 /* UIRefreshControl+AFNetworking.m in Sources */,
 				1BB9C7391B9E278600957C11 /* AFURLConnectionOperation.m in Sources */,
 				1B58132A1BA89D0E0097EF41 /* InstaUser.m in Sources */,
-				1BB9C6E31B98971900957C11 /* ViewController.m in Sources */,
+				1BB9C6E31B98971900957C11 /* RecentImagesViewController.m in Sources */,
 				1BB9C7421B9E278600957C11 /* UIProgressView+AFNetworking.m in Sources */,
 				1BB9C6E01B98971900957C11 /* AppDelegate.m in Sources */,
 				1BB9C73F1B9E278600957C11 /* UIAlertView+AFNetworking.m in Sources */,
@@ -403,7 +411,7 @@
 				1BB9C6DD1B98971900957C11 /* main.m in Sources */,
 				1BB9C70B1B9E143300957C11 /* MediaData.m in Sources */,
 				1BB9C7361B9E278600957C11 /* AFHTTPSessionManager.m in Sources */,
-				1BB9C7051B989B0500957C11 /* RootView.m in Sources */,
+				1BB9C7051B989B0500957C11 /* RecentImagesView.m in Sources */,
 				1BB9C7441B9E278600957C11 /* UIWebView+AFNetworking.m in Sources */,
 				1BB9C7371B9E278600957C11 /* AFNetworkReachabilityManager.m in Sources */,
 				1BB9C7411B9E278600957C11 /* UIImageView+AFNetworking.m in Sources */,

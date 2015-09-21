@@ -14,11 +14,9 @@
 
 + (APIManager *)sharedManager;
 
-- (void) setBaseURL:(NSURL *)url;
-- (void) setMethod:(NSString *)method;
-- (void) setAccessToken:(NSString *)access;
-- (void) requestWithParams:(NSDictionary *)parameters completion:(void (^)(NSMutableArray *, NSURL*))completion;
-- (void) searchForName:(NSString*)name withCompletion:(void (^)(NSArray *))completion;
-- (void) requestWithURL:(NSURL *)url completion:(void (^)(NSMutableArray *, NSURL *))completion;
+- (void) setMethod:(NSString*)method;
+- (void) getImagesWithParams:(NSDictionary *)parameters completion:(void (^)(NSMutableArray *, NSURL*))completion;
+- (void) searchUsersWithName:(NSString*)name completion:(void (^)(NSArray *))completion;
+- (void) getImagesWithURL:(NSURL *)url completion:(void (^)(NSMutableArray *, NSURL *))completion;
 
 @end

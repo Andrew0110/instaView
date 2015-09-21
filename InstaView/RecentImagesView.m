@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 obodev.com. All rights reserved.
 //
 
-#import "RootView.h"
+#import "RecentImagesView.h"
 
-@implementation RootView
+@implementation RecentImagesView
 
 - (instancetype)init
 {
@@ -17,12 +17,14 @@
         self.backgroundColor = [UIColor whiteColor];
         
         _tableView = [UITableView new];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:_tableView];
     }
     return self;
 }
 
 - (void) layoutSubviews {
+    [super layoutSubviews];
     _tableView.frame = self.bounds;
 }
 

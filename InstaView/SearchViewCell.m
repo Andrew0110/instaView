@@ -7,41 +7,46 @@
 //
 
 #import "SearchViewCell.h"
+#import "UIImageView+AFNetworking.h"
+
+@interface SearchViewCell ()
+
+@property (nonatomic) UIImageView *portraitImageView;
+@property (nonatomic) UILabel     *label;
+
+@end
 
 @implementation SearchViewCell
 
-- (instancetype)init
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super init];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        _portraitImageView = [[UIImageView alloc] init];
-        _portraitImageView.contentMode     = UIViewContentModeScaleAspectFit;
+        _portraitImageView             = [UIImageView new];
+        _portraitImageView.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:_portraitImageView];
         
         
         _label = [UILabel new];
         _label.numberOfLines = 0;
-        //        _likesLabel.lineBreakMode = NSLineBreakByCharWrapping;
-        //        _likesLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_label];
     }
     
     return self;
 }
 
+- (void)configureWithUser:(InstaUser *)aUser {
+    [_portraitImageView setImageWithURL:aUser.pictureProfile placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    _label.text = aUser.username;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    //static const
-    int imageSize = self.bounds.size.height;
+    const int imageSize = self.bounds.size.height;
     
-    _portraitImageView.frame = CGRectMake(5,
-                                     1,
-                                     imageSize-2,
-                                     imageSize-2);
+    _portraitImageView.frame = CGRectMake(5, 1, imageSize-2, imageSize-2);
     _label.frame = CGRectMake(imageSize+10, (imageSize-30)/2,
                               self.bounds.size.width - imageSize-10, 30);
-    
-    
 }
 @end

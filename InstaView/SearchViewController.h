@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "SearchView.h"
 
-@interface SearchViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate>
-
-@property (nonatomic) SearchView* searchView;
+@interface SearchViewController : UIViewController 
 
 @end

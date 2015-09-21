@@ -10,9 +10,9 @@
 
 @implementation InstagramPhotoCell
 
-- (instancetype)init
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super init];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _photoImgView = [[UIImageView alloc] init];
         _photoImgView.contentMode     = UIViewContentModeScaleAspectFit;
@@ -29,17 +29,16 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    const int imageSize = [UIScreen mainScreen].bounds.size.width;
     
-    int imageSize = [UIScreen mainScreen].bounds.size.width;
-    
-    _photoImgView.frame = CGRectMake(self.bounds.size.width/2 - imageSize/2,
-                                0,
-                                imageSize,
-                                imageSize);
+    _photoImgView.frame = CGRectMake(0,
+                                     0,
+                                     imageSize,
+                                     imageSize);
     _likesLabel.frame = CGRectMake(5,
-                                    CGRectGetMaxY(_photoImgView.frame),
-                                    _photoImgView.frame.size.width-5,
-                                    30);
+                                   CGRectGetMaxY(_photoImgView.frame),
+                                   _photoImgView.frame.size.width-5,
+                                   30);
     [_likesLabel sizeToFit];
 }
 
