@@ -131,14 +131,10 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     
     UITextView *textView = (UITextView *)tapGesture.view;
     
-    // Location of the tap in text-container coordinates
-    
     NSLayoutManager *layoutManager = textView.layoutManager;
     CGPoint location = [tapGesture locationInView:textView];
     location.x -= textView.textContainerInset.left;
     location.y -= textView.textContainerInset.top;
-    
-    // Find the character that's been tapped on
     
     NSUInteger indexOfCharacter;
     indexOfCharacter = [layoutManager characterIndexForPoint:location
@@ -146,7 +142,6 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
                   fractionOfDistanceBetweenInsertionPoints:NULL];
     
     
-//    NSLog(@"index = %ld", (long)indexOfCharacter);
     NSRange likesRange = NSMakeRange(0, 5);
     if (NSLocationInRange(indexOfCharacter, likesRange)) {
         NSLog(@"Likes :)");
@@ -197,7 +192,6 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat height = [UIScreen mainScreen].bounds.size.width;
-//    UIFont *fontText = [UIFont systemFontOfSize:14];
     
     CGSize maximumTextSize = CGSizeMake([UIScreen mainScreen].bounds.size.width-10, CGFLOAT_MAX);
     
@@ -219,12 +213,6 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     
     [((InstagramPhotoCell *)cell).photoImgView setImageWithURL:((MediaData*)_loadedData[indexPath.row]).photoURL placeholderImage:[UIImage imageNamed:@"placeholder"]];
     NSLog(@"%@",((MediaData*)_loadedData[indexPath.row]).photoURL);
-    
-//    ((InstagramPhotoCell *)cell).likesLabel.tag = indexPath.row;
-//    ((InstagramPhotoCell *)cell).likesLabel.attributedText = [(MediaData*)_loadedData[indexPath.row] getAttributedText];
-//    
-//    ((InstagramPhotoCell *)cell).likesLabel.userInteractionEnabled = YES;
-//    [((InstagramPhotoCell *)cell).likesLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnLabel:)]];
     
     ((InstagramPhotoCell *)cell).textView.tag = indexPath.row;
     ((InstagramPhotoCell *)cell).textView.attributedText = [(MediaData*)_loadedData[indexPath.row] getAttributedText];

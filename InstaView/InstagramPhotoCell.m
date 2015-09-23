@@ -17,15 +17,9 @@
         _photoImgView = [[UIImageView alloc] init];
         _photoImgView.contentMode     = UIViewContentModeScaleAspectFit;
         [self addSubview:_photoImgView];
-
-        
-        _likesLabel = [UILabel new];
-        _likesLabel.numberOfLines = 0;
-//        [self addSubview:_likesLabel];
         
         _textView = [UITextView new];
         _textView.scrollEnabled = NO;
-//        _textView.textContainerInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
         _textView.editable = NO;
         [self addSubview:_textView];
     }
@@ -47,11 +41,6 @@
                                 imageSize-10,
                                 1);
     [_textView sizeToFit];
-//    _likesLabel.frame = CGRectMake(5,
-//                                   CGRectGetMaxY(_photoImgView.frame),
-//                                   _photoImgView.frame.size.width-5,
-//                                   30);
-//    [_likesLabel sizeToFit];
     
 }
 
