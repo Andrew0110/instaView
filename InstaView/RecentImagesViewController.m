@@ -201,7 +201,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
                                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
                                                      context:nil];
     
-    height += textRect.size.height+30;
+    height += textRect.size.height + 8;
     
     return height;
 }
