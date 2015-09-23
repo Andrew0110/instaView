@@ -92,9 +92,10 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     textContainer.lineFragmentPadding = 0.0;
     textContainer.lineBreakMode = label.lineBreakMode;
     textContainer.maximumNumberOfLines = label.numberOfLines;
+    textContainer.widthTracksTextView = YES;
     textContainer.size = label.bounds.size;
 
-    CGPoint locationOfTouchInLabel = [tapGesture locationInView:tapGesture.view];
+    CGPoint locationOfTouchInLabel = [tapGesture locationInView:label];
     CGSize labelSize = tapGesture.view.bounds.size;
     CGRect textBoundingBox = [layoutManager usedRectForTextContainer:textContainer];
     CGPoint textContainerOffset = CGPointMake((labelSize.width - textBoundingBox.size.width) * 0.5 - textBoundingBox.origin.x,
@@ -105,7 +106,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     NSInteger indexOfCharacter = [layoutManager characterIndexForPoint:locationOfTouchInTextContainer
                                                             inTextContainer:textContainer
                                    fractionOfDistanceBetweenInsertionPoints:nil];
-    NSLog(@"%hu", [label.attributedText.string characterAtIndex:indexOfCharacter]);
+    NSLog(@"index = %ld, letter = %hu", (long)indexOfCharacter, [label.attributedText.string characterAtIndex:indexOfCharacter]);
     NSRange likesRange = NSMakeRange(0, 5);
     if (NSLocationInRange(indexOfCharacter, likesRange)) {
         NSLog(@"Likes :)");
@@ -125,6 +126,47 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
         }
     }
  }
+
+- (void) handleTapOnTextView:(UITapGestureRecognizer *)tapGesture {
+    
+    UITextView *textView = (UITextView *)tapGesture.view;
+    
+    // Location of the tap in text-container coordinates
+    
+    NSLayoutManager *layoutManager = textView.layoutManager;
+    CGPoint location = [tapGesture locationInView:textView];
+    location.x -= textView.textContainerInset.left;
+    location.y -= textView.textContainerInset.top;
+    
+    // Find the character that's been tapped on
+    
+    NSUInteger indexOfCharacter;
+    indexOfCharacter = [layoutManager characterIndexForPoint:location
+                                           inTextContainer:textView.textContainer
+                  fractionOfDistanceBetweenInsertionPoints:NULL];
+    
+    
+//    NSLog(@"index = %ld", (long)indexOfCharacter);
+    NSRange likesRange = NSMakeRange(0, 5);
+    if (NSLocationInRange(indexOfCharacter, likesRange)) {
+        NSLog(@"Likes :)");
+    }
+    
+    NSArray *values = ((MediaData*)_loadedData[textView.tag]).ranges;
+    
+    for ( int i = 0; i < values.count; i++ ) {
+        NSRange range = ((NSValue*)values[i]).rangeValue;
+        if (NSLocationInRange(indexOfCharacter, range)) {
+            
+            RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserId:((MediaData*)_loadedData[textView.tag]).userCommentedIDs[i]];
+            
+            i = (int)values.count;
+            
+            [self.navigationController pushViewController:viewController animated:YES];
+        }
+    }
+}
+
 
 #pragma mark - API actions
 - (void)loadNewImages {
@@ -155,17 +197,17 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat height = [UIScreen mainScreen].bounds.size.width;
-    UIFont *fontText = [UIFont systemFontOfSize:14];
+//    UIFont *fontText = [UIFont systemFontOfSize:14];
     
-    CGSize maximumLabelSize = CGSizeMake(height-10, CGFLOAT_MAX);
+    CGSize maximumTextSize = CGSizeMake([UIScreen mainScreen].bounds.size.width-10, CGFLOAT_MAX);
     
     NSAttributedString *attributedString = [((MediaData*)_loadedData[indexPath.row]) getAttributedText];
     
-    CGRect textRect = [attributedString.string boundingRectWithSize:maximumLabelSize options:NSStringDrawingUsesLineFragmentOrigin
-                                          attributes:@{NSFontAttributeName:fontText}
-                                             context:nil];
+    CGRect textRect = [attributedString boundingRectWithSize:maximumTextSize
+                                                     options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                     context:nil];
     
-    height += textRect.size.height;
+    height += textRect.size.height+30;
     
     return height;
 }
@@ -178,11 +220,18 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     [((InstagramPhotoCell *)cell).photoImgView setImageWithURL:((MediaData*)_loadedData[indexPath.row]).photoURL placeholderImage:[UIImage imageNamed:@"placeholder"]];
     NSLog(@"%@",((MediaData*)_loadedData[indexPath.row]).photoURL);
     
-    ((InstagramPhotoCell *)cell).likesLabel.tag = indexPath.row;
-    ((InstagramPhotoCell *)cell).likesLabel.attributedText = [(MediaData*)_loadedData[indexPath.row] getAttributedText];
+//    ((InstagramPhotoCell *)cell).likesLabel.tag = indexPath.row;
+//    ((InstagramPhotoCell *)cell).likesLabel.attributedText = [(MediaData*)_loadedData[indexPath.row] getAttributedText];
+//    
+//    ((InstagramPhotoCell *)cell).likesLabel.userInteractionEnabled = YES;
+//    [((InstagramPhotoCell *)cell).likesLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnLabel:)]];
     
-    ((InstagramPhotoCell *)cell).likesLabel.userInteractionEnabled = YES;
-    [((InstagramPhotoCell *)cell).likesLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnLabel:)]];
+    ((InstagramPhotoCell *)cell).textView.tag = indexPath.row;
+    ((InstagramPhotoCell *)cell).textView.attributedText = [(MediaData*)_loadedData[indexPath.row] getAttributedText];
+    
+    ((InstagramPhotoCell *)cell).textView.userInteractionEnabled = YES;
+    [((InstagramPhotoCell *)cell).textView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnTextView:)]];
+    
 }
 
 @end

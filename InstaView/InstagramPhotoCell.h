@@ -12,5 +12,6 @@
 
 @property (nonatomic) UIImageView* photoImgView;
 @property (nonatomic) UILabel* likesLabel;
+@property (nonatomic) UITextView* textView;
 
 @end

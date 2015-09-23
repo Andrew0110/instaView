@@ -21,7 +21,13 @@
         
         _likesLabel = [UILabel new];
         _likesLabel.numberOfLines = 0;
-        [self addSubview:_likesLabel];
+//        [self addSubview:_likesLabel];
+        
+        _textView = [UITextView new];
+        _textView.scrollEnabled = NO;
+//        _textView.textContainerInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
+        _textView.editable = NO;
+        [self addSubview:_textView];
     }
     
     return self;
@@ -35,11 +41,18 @@
                                      0,
                                      imageSize,
                                      imageSize);
-    _likesLabel.frame = CGRectMake(5,
-                                   CGRectGetMaxY(_photoImgView.frame),
-                                   _photoImgView.frame.size.width-5,
-                                   30);
-    [_likesLabel sizeToFit];
+    
+    _textView.frame = CGRectMake(5,
+                                CGRectGetMaxY(_photoImgView.frame),
+                                imageSize-10,
+                                1);
+    [_textView sizeToFit];
+//    _likesLabel.frame = CGRectMake(5,
+//                                   CGRectGetMaxY(_photoImgView.frame),
+//                                   _photoImgView.frame.size.width-5,
+//                                   30);
+//    [_likesLabel sizeToFit];
+    
 }
 
 
