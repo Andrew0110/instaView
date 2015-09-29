@@ -10,4 +10,14 @@
 
 @implementation InstaUser
 
++ (InstaUser *)instaUserFromDict:(NSDictionary *)source {
+    InstaUser *user = [InstaUser new];
+    
+    user.username = source[@"username"];
+    user.userID = source[@"id"];
+    user.pictureProfile = [NSURL URLWithString:source[@"profile_picture"]];
+    
+    return user;
+}
+
 @end

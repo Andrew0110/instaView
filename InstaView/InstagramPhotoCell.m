@@ -20,11 +20,11 @@
         
         _textView = [UITextView new];
         
-        _textView.textContainerInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
+        _textView.textContainerInset = UIEdgeInsetsZero;
         _textView.textContainer.lineFragmentPadding = 0;
 
         _textView.scrollEnabled = NO;
-        _textView.editable = NO;
+        _textView.editable      = NO;
         [self addSubview:_textView];
     }
     
@@ -33,19 +33,16 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    const int imageSize = [UIScreen mainScreen].bounds.size.width;
     
-    _photoImgView.frame = CGRectMake(0,
-                                     0,
-                                     imageSize,
-                                     imageSize);
+    CGRect frame = self.bounds;
+    frame.size.height = frame.size.width;
+    self.photoImgView.frame = frame;
     
     _textView.frame = CGRectMake(5,
                                 CGRectGetMaxY(_photoImgView.frame),
-                                imageSize-10,
+                                CGRectGetWidth(self.photoImgView.frame)-10,
                                 1);
     [_textView sizeToFit];
-    
 }
 
 

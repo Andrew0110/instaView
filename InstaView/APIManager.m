@@ -48,7 +48,7 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
         [request appendString:[NSString stringWithFormat:@"%@=%@&", key, [parameters objectForKey:key]]];
     }
     [request appendString:[NSString stringWithFormat:@"access_token=%@", kAccessToken]];
-    NSLog(@"Request %@", request);
+
     url = [NSURL URLWithString:request];
     
     [self getImagesWithURL:url completion:completion];
@@ -62,11 +62,7 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
                                              if ([response isKindOfClass: [NSDictionary class]]) {
                                                  NSMutableArray *instaUsers = [NSMutableArray array];
                                                  for ( NSDictionary *dict in response[@"data"] ) {
-                                                     InstaUser *user = [InstaUser new];
-                                                     user.username = dict[@"username"];
-                                                     user.userID = dict[@"id"];
-                                                     user.pictureProfile = [NSURL URLWithString:dict[@"profile_picture"]];
-                                                     [instaUsers addObject:user];
+                                                     [instaUsers addObject:[InstaUser instaUserFromDict:dict]];
                                                  }
                                                  if (completion) {
                                                      completion(instaUsers);
@@ -87,29 +83,7 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
                                                 
                                                 for ( NSDictionary *dict in response[@"data"]) {
                                                     if ([dict[@"type"] isEqualToString:@"image"]) {
-                                                        MediaData* mediaData = [MediaData new];
-                                                        mediaData.likes = [dict[@"likes"][@"count"] longLongValue];
-                                                        mediaData.photoURL = [NSURL URLWithString: dict[@"images"][@"low_resolution"][@"url"]];
-                                                        if ( dict[@"caption"] != [NSNull null] ) {
-                                                            mediaData.caption = dict[@"caption"][@"text"];
-                                                            mediaData.username = dict[@"caption"][@"from"][@"username"];
-                                                        }
-                                                        
-                                                        NSMutableArray* allComments = [NSMutableArray array];
-                                                        NSMutableArray* users = [NSMutableArray array];
-                                                        NSMutableArray* usersCommentedID = [NSMutableArray array];
-                                                        
-                                                        for ( NSDictionary *comment in dict[@"comments"][@"data"] ) {
-                                                            [allComments addObject:comment[@"text"]];
-                                                            [users addObject:comment[@"from"][@"username"]];
-                                                            [usersCommentedID addObject:comment[@"from"][@"id"]];
-                                                        }
-                                                        
-                                                        mediaData.comments = allComments;
-                                                        mediaData.usersCommented = users;
-                                                        mediaData.userCommentedIDs = usersCommentedID;
-                                                        
-                                                        [media addObject:mediaData];
+                                                        [media addObject:[MediaData mediaDataFromDict:dict]];
                                                     }
                                                 }
                                                 if (completion) {
@@ -117,8 +91,15 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
                                                 }
                                             }
                                         }
-                                        failure:^(AFHTTPRequestOperation *operation, NSError *error){
-                                            NSLog(@"%@", error);
+                                        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                            UIAlertView *alertView = [[UIAlertView alloc]
+                                                                      initWithTitle:@"Error"
+                                                                      message:@"Sorry. You can't look this account"
+                                                                      delegate:nil
+                                                                      cancelButtonTitle:@"Ok"
+                                                                      otherButtonTitles:nil];
+                                            
+                                            [alertView show];
                                         }];
 }
 

@@ -14,7 +14,7 @@
 #import "UIImageView+AFNetworking.h"
 #import <CoreText/CoreText.h>
 
-@interface RecentImagesViewController ()
+@interface RecentImagesViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic) RecentImagesView* rootView;
 @property (nonatomic) NSMutableArray* loadedData;
@@ -32,7 +32,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     self = [super init];
     
     if ( self ) {
-        self.instagramUserID = [NSString stringWithString:userID];
+        self.instagramUserID = userID;
     }
     
     return self;
@@ -52,18 +52,20 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     _rootView.tableView.delegate = self;
     
     _manager = [APIManager sharedManager];
-    [_manager setMethod:[NSString stringWithFormat:@"users/%@/media/recent/", _instagramUserID]];
+    [_manager setMethod: [NSString stringWithFormat:@"users/%@/media/recent/", _instagramUserID]];
     
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"count", nil];
     
-    [_manager getImagesWithParams:params completion:^(NSMutableArray *media, NSURL *nextURL) {
+    __weak typeof(self) weakSelf = self;
+    
+    [_manager getImagesWithParams:params
+                       completion:^(NSMutableArray *media, NSURL *nextURL)
+    {
         [_loadedData addObjectsFromArray:media];
-        _nextURL = nextURL;
-        
-        NSLog(@"count = %lu", (unsigned long)[media count]);
+        weakSelf.nextURL = nextURL;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.rootView.tableView reloadData];
+            [weakSelf.rootView.tableView reloadData];
         });
     }
     ];
@@ -79,93 +81,86 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 
 #pragma mark - Actions
 
-- (void) handleTapOnLabel:(UITapGestureRecognizer *)tapGesture {
-    UILabel *label = (UILabel *)tapGesture.view;
-    
-    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
-    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:CGSizeZero];
-    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:label.attributedText];
-
-    [layoutManager addTextContainer:textContainer];
-    [textStorage addLayoutManager:layoutManager];
-    
-    textContainer.lineFragmentPadding = 0.0;
-    textContainer.lineBreakMode = label.lineBreakMode;
-    textContainer.maximumNumberOfLines = label.numberOfLines;
-    textContainer.widthTracksTextView = YES;
-    textContainer.size = label.bounds.size;
-
-    CGPoint locationOfTouchInLabel = [tapGesture locationInView:label];
-    CGSize labelSize = tapGesture.view.bounds.size;
-    CGRect textBoundingBox = [layoutManager usedRectForTextContainer:textContainer];
-    CGPoint textContainerOffset = CGPointMake((labelSize.width - textBoundingBox.size.width) * 0.5 - textBoundingBox.origin.x,
-                                              (labelSize.height - textBoundingBox.size.height) * 0.5 - textBoundingBox.origin.y);
-    CGPoint locationOfTouchInTextContainer = CGPointMake(locationOfTouchInLabel.x - textContainerOffset.x,
-                                                         locationOfTouchInLabel.y - textContainerOffset.y);
-
-    NSInteger indexOfCharacter = [layoutManager characterIndexForPoint:locationOfTouchInTextContainer
-                                                            inTextContainer:textContainer
-                                   fractionOfDistanceBetweenInsertionPoints:nil];
-    NSLog(@"index = %ld, letter = %hu", (long)indexOfCharacter, [label.attributedText.string characterAtIndex:indexOfCharacter]);
-    NSRange likesRange = NSMakeRange(0, 5);
-    if (NSLocationInRange(indexOfCharacter, likesRange)) {
-        NSLog(@"Likes :)");
-    }
-    
-    NSArray *values = ((MediaData*)_loadedData[label.tag]).ranges;
-    
-    for ( int i = 0; i < values.count; i++ ) {
-        NSRange range = ((NSValue*)values[i]).rangeValue;
-        if (NSLocationInRange(indexOfCharacter, range)) {
-            
-            RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserId:((MediaData*)_loadedData[label.tag]).userCommentedIDs[i]];
-            
-            i = (int)values.count;
-            
-            [self.navigationController pushViewController:viewController animated:YES];
-        }
-    }
- }
+//- (void) handleTapOnLabel:(UITapGestureRecognizer *)sender {
+//    UILabel *label = (UILabel *)sender.view;
+//    
+//    NSLayoutManager *layoutManager = [NSLayoutManager new];
+//    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:CGSizeZero];
+//    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:label.attributedText];
+//
+//    [layoutManager addTextContainer:textContainer];
+//    [textStorage addLayoutManager:layoutManager];
+//    
+//    textContainer.lineFragmentPadding = 0.0;
+//    textContainer.lineBreakMode = label.lineBreakMode;
+//    textContainer.maximumNumberOfLines = label.numberOfLines;
+//    textContainer.widthTracksTextView = YES;
+//    textContainer.size = label.bounds.size;
+//
+//    CGPoint locationOfTouchInLabel = [sender locationInView:label];
+//    CGSize labelSize = sender.view.bounds.size;
+//    CGRect textBoundingBox = [layoutManager usedRectForTextContainer:textContainer];
+//    CGPoint textContainerOffset = CGPointMake((labelSize.width - textBoundingBox.size.width) * 0.5 - textBoundingBox.origin.x,
+//                                              (labelSize.height - textBoundingBox.size.height) * 0.5 - textBoundingBox.origin.y);
+//    CGPoint locationOfTouchInTextContainer = CGPointMake(locationOfTouchInLabel.x - textContainerOffset.x,
+//                                                         locationOfTouchInLabel.y - textContainerOffset.y);
+//
+//    NSInteger indexOfCharacter = [layoutManager characterIndexForPoint:locationOfTouchInTextContainer
+//                                                            inTextContainer:textContainer
+//                                   fractionOfDistanceBetweenInsertionPoints:nil];
+//    NSLog(@"index = %ld, letter = %hu", (long)indexOfCharacter, [label.attributedText.string characterAtIndex:indexOfCharacter]);
+//    NSRange likesRange = NSMakeRange(0, 5);
+//    if (NSLocationInRange(indexOfCharacter, likesRange)) {
+//        NSLog(@"Likes :)");
+//    }
+//    
+//    NSArray *values = ((MediaData*)_loadedData[label.tag]).ranges;
+//    
+//    for ( int i = 0; i < values.count; i++ ) {
+//        NSRange range = ((NSValue*)values[i]).rangeValue;
+//        if (NSLocationInRange(indexOfCharacter, range)) {
+//            
+//            RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserId:((MediaData*)_loadedData[label.tag]).userCommentedIDs[i]];
+//            
+//            i = (int)values.count;
+//            
+//            [self.navigationController pushViewController:viewController animated:YES];
+//        }
+//    }
+// }
 
 - (void) handleTapOnTextView:(UITapGestureRecognizer *)tapGesture {
-    
     UITextView *textView = (UITextView *)tapGesture.view;
     
-    NSLayoutManager *layoutManager = textView.layoutManager;
     CGPoint location = [tapGesture locationInView:textView];
     location.x -= textView.textContainerInset.left;
     location.y -= textView.textContainerInset.top;
     
-    NSUInteger indexOfCharacter;
-    indexOfCharacter = [layoutManager characterIndexForPoint:location
-                                           inTextContainer:textView.textContainer
-                  fractionOfDistanceBetweenInsertionPoints:NULL];
+    NSUInteger indexOfCharacter = [textView.layoutManager characterIndexForPoint:location
+                                                                 inTextContainer:textView.textContainer
+                                        fractionOfDistanceBetweenInsertionPoints:NULL];
     
-    
-    NSRange likesRange = NSMakeRange(0, 5);
-    if (NSLocationInRange(indexOfCharacter, likesRange)) {
-        NSLog(@"Likes :)");
-    }
-    
-    NSArray *values = ((MediaData*)_loadedData[textView.tag]).ranges;
-    
-    for ( int i = 0; i < values.count; i++ ) {
-        NSRange range = ((NSValue*)values[i]).rangeValue;
-        if (NSLocationInRange(indexOfCharacter, range)) {
+    [((MediaData*)_loadedData[textView.tag]).ranges enumerateObjectsUsingBlock:^(NSValue *value,
+                                                                                 NSUInteger idx,
+                                                                                 BOOL *stop)
+    {
+        if (NSLocationInRange(indexOfCharacter, value.rangeValue)) {
             
-            RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserId:((MediaData*)_loadedData[textView.tag]).userCommentedIDs[i]];
-            
-            i = (int)values.count;
-            
-            [self.navigationController pushViewController:viewController animated:YES];
+            NSString *userID = ((MediaData*)_loadedData[textView.tag]).userCommentedIDs[idx];
+            if (![userID isEqualToString:self.instagramUserID]) {
+                RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserId:userID];
+                [self.navigationController pushViewController:viewController animated:YES];
+            }
+            *stop = YES;
         }
-    }
+    }];
 }
-
 
 #pragma mark - API actions
 - (void)loadNewImages {
-    [_manager getImagesWithURL:_nextURL completion:^(NSMutableArray *media, NSURL *nextURL) {
+    [_manager getImagesWithURL:_nextURL
+                    completion:^(NSMutableArray *media, NSURL *nextURL)
+    {
         [_loadedData addObjectsFromArray:media];
         _nextURL = nextURL;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -183,7 +178,8 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    InstagramPhotoCell *cell = [tableView dequeueReusableCellWithIdentifier:kPhotoCellIdentifier forIndexPath:indexPath];
+    InstagramPhotoCell *cell = [tableView dequeueReusableCellWithIdentifier:kPhotoCellIdentifier
+                                                               forIndexPath:indexPath];
     
     return cell;
 }
@@ -195,7 +191,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     
     CGSize maximumTextSize = CGSizeMake([UIScreen mainScreen].bounds.size.width-10, CGFLOAT_MAX);
     
-    NSAttributedString *attributedString = [((MediaData*)_loadedData[indexPath.row]) getAttributedText];
+    NSAttributedString *attributedString = [((MediaData*)_loadedData[indexPath.row]) attributedText];
     
     CGRect textRect = [attributedString boundingRectWithSize:maximumTextSize
                                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
@@ -215,11 +211,10 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     NSLog(@"%@",((MediaData*)_loadedData[indexPath.row]).photoURL);
     
     ((InstagramPhotoCell *)cell).textView.tag = indexPath.row;
-    ((InstagramPhotoCell *)cell).textView.attributedText = [(MediaData*)_loadedData[indexPath.row] getAttributedText];
+    ((InstagramPhotoCell *)cell).textView.attributedText = [(MediaData*)_loadedData[indexPath.row] attributedText];
     
     ((InstagramPhotoCell *)cell).textView.userInteractionEnabled = YES;
     [((InstagramPhotoCell *)cell).textView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnTextView:)]];
-    
 }
 
 @end

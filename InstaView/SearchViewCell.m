@@ -36,17 +36,19 @@
 }
 
 - (void)configureWithUser:(InstaUser *)aUser {
-    [_portraitImageView setImageWithURL:aUser.pictureProfile placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    [_portraitImageView setImageWithURL:aUser.pictureProfile
+                       placeholderImage:[UIImage imageNamed:@"placeholder"]];
     _label.text = aUser.username;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    const int imageSize = self.bounds.size.height;
+    const CGFloat imageSize = self.bounds.size.height;
     
     _portraitImageView.frame = CGRectMake(5, 1, imageSize-2, imageSize-2);
     _label.frame = CGRectMake(imageSize+10, (imageSize-30)/2,
                               self.bounds.size.width - imageSize-10, 30);
 }
+
 @end

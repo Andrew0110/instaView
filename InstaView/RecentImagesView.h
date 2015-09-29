@@ -10,6 +10,6 @@
 
 @interface RecentImagesView : UIView
 
-@property (nonatomic) UITableView* tableView;
+@property (nonatomic) UITableView *tableView;
 
 @end

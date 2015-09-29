@@ -25,6 +25,7 @@
 
 - (void) layoutSubviews {
     [super layoutSubviews];
+    
     _tableView.frame = self.bounds;
 }
 

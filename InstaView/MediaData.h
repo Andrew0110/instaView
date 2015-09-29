@@ -11,15 +11,17 @@
 
 @interface MediaData : NSObject
 
-@property (nonatomic) NSString* username;
-@property (nonatomic) NSString* caption;
-@property (nonatomic) NSURL* photoURL;
-@property (nonatomic) NSInteger likes;
-@property (nonatomic) NSArray* comments;
-@property (nonatomic) NSArray* usersCommented;
-@property (nonatomic) NSArray* userCommentedIDs;
-@property (nonatomic) NSArray* ranges;
+@property (nonatomic) NSString  *username;
+@property (nonatomic) NSString  *caption;
+@property (nonatomic) NSURL     *photoURL;
+@property (nonatomic) NSInteger  likes;
+@property (nonatomic) NSArray   *comments;
+@property (nonatomic) NSArray   *usersCommented;
+@property (nonatomic) NSArray   *userCommentedIDs;
+@property (nonatomic) NSArray   *ranges;
 
-- (NSAttributedString*) getAttributedText;
+@property (nonatomic, strong, readonly) NSAttributedString *attributedText;
+
++ (MediaData *)mediaDataFromDict:(NSDictionary *)source;
 
 @end

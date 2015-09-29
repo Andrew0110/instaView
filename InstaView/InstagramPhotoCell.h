@@ -10,7 +10,7 @@
 
 @interface InstagramPhotoCell : UITableViewCell
 
-@property (nonatomic) UIImageView* photoImgView;
-@property (nonatomic) UITextView* textView;
+@property (nonatomic) UIImageView *photoImgView;
+@property (nonatomic) UITextView  *textView;
 
 @end

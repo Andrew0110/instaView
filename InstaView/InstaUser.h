@@ -10,8 +10,10 @@
 
 @interface InstaUser : NSObject
 
-@property (nonatomic) NSString* username;
-@property (nonatomic) NSString* userID;
-@property (nonatomic) NSURL* pictureProfile;
+@property (nonatomic) NSString  *username;
+@property (nonatomic) NSString  *userID;
+@property (nonatomic) NSURL     *pictureProfile;
+
++ (InstaUser *)instaUserFromDict:(NSDictionary *)source;
 
 @end

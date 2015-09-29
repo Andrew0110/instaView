@@ -78,10 +78,14 @@ static NSUInteger const kCellHeight = 60;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [_searchView.searchBar resignFirstResponder];
     
-    [self.navigationController pushViewController:viewController animated:YES];
+    [self.navigationController pushViewController:viewController
+                                         animated:YES];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView
+  willDisplayCell:(UITableViewCell *)cell
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
     [(SearchViewCell*)cell configureWithUser:self.users[indexPath.row]];
 }
 
@@ -114,7 +118,9 @@ static NSUInteger const kCellHeight = 60;
 
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    [_manager searchUsersWithName:searchBar.text completion:^(NSArray *users) {
+    [_manager searchUsersWithName:searchBar.text
+                       completion:^(NSArray *users)
+    {
         _users = users;
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -124,6 +130,5 @@ static NSUInteger const kCellHeight = 60;
     
     [searchBar resignFirstResponder];
 }
-
 
 @end

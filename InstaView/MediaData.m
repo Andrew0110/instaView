@@ -10,43 +10,80 @@
 
 @implementation MediaData
 
-- (NSAttributedString*) getAttributedText {
-    NSMutableArray *usernameRanges = [NSMutableArray array];
-    
-    NSMutableString *text = [NSMutableString stringWithFormat:@"likes: %ld", _likes];
-    NSRange likesRange = NSMakeRange(0, 6);
-    
-    NSRange boldedRange = NSMakeRange(text.length+1, _username.length);
-    [text appendFormat:@"\n%@: %@\n", _username, _caption];
+@synthesize attributedText = _attributedText;
 
+- (NSAttributedString *)attributedText {
+    if (!_attributedText) {
+        NSMutableArray *usernameRanges = [NSMutableArray array];
+        
+        NSMutableString *text = [NSMutableString stringWithFormat:@"likes: %ld", _likes];
+        NSRange likesRange = NSMakeRange(0, 6);
+        
+        NSRange boldedRange = NSMakeRange(text.length+1, _username.length);
+        if (_username) {
+            [text appendFormat:@"\n%@: %@\n", _username, _caption];
+        } else {
+            [text appendString:@"\n"];
+        }
+        
+        for ( int i = 0; i < _comments.count; i++ ) {
+            NSRange linkedRange = NSMakeRange(text.length+1, ((NSString*)_usersCommented[i]).length);
+            [text appendFormat:@"\n%@ %@", _usersCommented[i], _comments[i]];
+            [usernameRanges addObject:[NSValue valueWithRange:linkedRange]];
+        }
+        
+        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text];
+        
+        [attributedText beginEditing];
+        [attributedText addAttribute:NSFontAttributeName
+                               value:[UIFont systemFontOfSize:14]
+                               range: NSMakeRange(0, attributedText.length)];
+        [attributedText endEditing];
+        
+        NSDictionary *linkAttributes = @{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.05
+                                                                                           green:0.4
+                                                                                            blue:0.65
+                                                                                           alpha:1.0],
+                                          NSFontAttributeName : [UIFont boldSystemFontOfSize:14]};
+        [attributedText setAttributes:linkAttributes range:boldedRange];
+        [attributedText setAttributes:linkAttributes range:likesRange];
+        
+        
+        
+        for ( int i = 0; i < usernameRanges.count; i++ ) {
+            [attributedText setAttributes:linkAttributes range:((NSValue*)usernameRanges[i]).rangeValue];
+        }
+        _ranges = usernameRanges;
+        _attributedText = attributedText;
+    }
+    return _attributedText;
+}
+
++ (MediaData *)mediaDataFromDict:(NSDictionary *)source {
+    MediaData *mediaData = [MediaData new];
     
-    for ( int i = 0; i < _comments.count; i++ ) {
-        NSRange linkedRange = NSMakeRange(text.length+1, ((NSString*)_usersCommented[i]).length);
-        [text appendFormat:@"\n%@ %@", _usersCommented[i], _comments[i]];
-        [usernameRanges addObject:[NSValue valueWithRange:linkedRange]];
+    mediaData.likes = [source[@"likes"][@"count"] longLongValue];
+    mediaData.photoURL = [NSURL URLWithString: source[@"images"][@"low_resolution"][@"url"]];
+    if ( source[@"caption"] != [NSNull null] ) {
+        mediaData.caption = source[@"caption"][@"text"];
+        mediaData.username = source[@"caption"][@"from"][@"username"];
     }
     
-    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text];
+    NSMutableArray* allComments = [NSMutableArray array];
+    NSMutableArray* users = [NSMutableArray array];
+    NSMutableArray* usersCommentedID = [NSMutableArray array];
     
-    [attributedText beginEditing];
-    [attributedText addAttribute:NSFontAttributeName
-                           value:[UIFont systemFontOfSize:14]
-                           range: NSMakeRange(0, attributedText.length)];
-    [attributedText endEditing];
-    
-    NSDictionary *linkAttributes = @{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.05 green:0.4 blue:0.65 alpha:1.0],
-                                      NSFontAttributeName : [UIFont boldSystemFontOfSize:14]};
-    [attributedText setAttributes:linkAttributes range:boldedRange];
-    [attributedText setAttributes:linkAttributes range:likesRange];
-
-
-    
-    for ( int i = 0; i < usernameRanges.count; i++ ) {
-        [attributedText setAttributes:linkAttributes range:((NSValue*)usernameRanges[i]).rangeValue];
+    for ( NSDictionary *comment in source[@"comments"][@"data"] ) {
+        [allComments addObject:comment[@"text"]];
+        [users addObject:comment[@"from"][@"username"]];
+        [usersCommentedID addObject:comment[@"from"][@"id"]];
     }
-    _ranges = usernameRanges;
-
-    return attributedText;
+    
+    mediaData.comments = allComments;
+    mediaData.usersCommented = users;
+    mediaData.userCommentedIDs = usersCommentedID;
+    
+    return mediaData;
 }
 
 @end
