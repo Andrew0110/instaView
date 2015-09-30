@@ -18,6 +18,8 @@
         
         NSMutableString *text = [NSMutableString stringWithFormat:@"likes: %ld", _likes];
         NSRange likesRange = NSMakeRange(0, 6);
+        NSRange commentsCountRange = NSMakeRange(text.length+1, 8);
+        [text appendFormat:@"\nComments: %ld\n", (long)_commentsCount];
         
         NSRange boldedRange = NSMakeRange(text.length+1, _username.length);
         if (_username) {
@@ -45,10 +47,9 @@
                                                                                             blue:0.65
                                                                                            alpha:1.0],
                                           NSFontAttributeName : [UIFont boldSystemFontOfSize:14]};
+        [attributedText setAttributes:linkAttributes range:commentsCountRange];
         [attributedText setAttributes:linkAttributes range:boldedRange];
         [attributedText setAttributes:linkAttributes range:likesRange];
-        
-        
         
         for ( int i = 0; i < usernameRanges.count; i++ ) {
             [attributedText setAttributes:linkAttributes range:((NSValue*)usernameRanges[i]).rangeValue];
@@ -68,6 +69,8 @@
         mediaData.caption = source[@"caption"][@"text"];
         mediaData.username = source[@"caption"][@"from"][@"username"];
     }
+    
+    mediaData.commentsCount = [source[@"comments"][@"count"] longLongValue];
     
     NSMutableArray* allComments = [NSMutableArray array];
     NSMutableArray* users = [NSMutableArray array];
