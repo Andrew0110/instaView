@@ -11,6 +11,7 @@
 		1B5813261BA8905C0097EF41 /* SearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5813251BA8905C0097EF41 /* SearchView.m */; };
 		1B58132A1BA89D0E0097EF41 /* InstaUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5813291BA89D0E0097EF41 /* InstaUser.m */; };
 		1B58132D1BA9E5F80097EF41 /* SearchViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B58132C1BA9E5F80097EF41 /* SearchViewCell.m */; };
+		1B738B6A1BBF92BC00ED19A1 /* SortedImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B738B691BBF92BC00ED19A1 /* SortedImagesViewController.m */; settings = {ASSET_TAGS = (); }; };
 		1BB9C6DD1B98971900957C11 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6DC1B98971900957C11 /* main.m */; };
 		1BB9C6E01B98971900957C11 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6DF1B98971900957C11 /* AppDelegate.m */; };
 		1BB9C6E31B98971900957C11 /* RecentImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6E21B98971900957C11 /* RecentImagesViewController.m */; };
@@ -58,6 +59,8 @@
 		1B5813291BA89D0E0097EF41 /* InstaUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstaUser.m; sourceTree = "<group>"; };
 		1B58132B1BA9E5F80097EF41 /* SearchViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewCell.h; sourceTree = "<group>"; };
 		1B58132C1BA9E5F80097EF41 /* SearchViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewCell.m; sourceTree = "<group>"; };
+		1B738B681BBF92BC00ED19A1 /* SortedImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortedImagesViewController.h; sourceTree = "<group>"; };
+		1B738B691BBF92BC00ED19A1 /* SortedImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SortedImagesViewController.m; sourceTree = "<group>"; };
 		1BB9C6D71B98971900957C11 /* InstaView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BB9C6DB1B98971900957C11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BB9C6DC1B98971900957C11 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -159,6 +162,15 @@
 			name = RecentImages;
 			sourceTree = "<group>";
 		};
+		1B738B6B1BC28F6300ED19A1 /* SortedImages */ = {
+			isa = PBXGroup;
+			children = (
+				1B738B681BBF92BC00ED19A1 /* SortedImagesViewController.h */,
+				1B738B691BBF92BC00ED19A1 /* SortedImagesViewController.m */,
+			);
+			name = SortedImages;
+			sourceTree = "<group>";
+		};
 		1BB9C6CE1B98971800957C11 = {
 			isa = PBXGroup;
 			children = (
@@ -186,6 +198,7 @@
 				1BB9C6DF1B98971900957C11 /* AppDelegate.m */,
 				1B5813271BA895920097EF41 /* Search */,
 				1B69C6891BB03F220012DE62 /* RecentImages */,
+				1B738B6B1BC28F6300ED19A1 /* SortedImages */,
 				1BB9C70D1B9E1D0400957C11 /* API */,
 				1BB9C70C1B9E1CEC00957C11 /* model */,
 				1BB9C6E71B98971900957C11 /* Images.xcassets */,
@@ -392,6 +405,7 @@
 				1BB9C7391B9E278600957C11 /* AFURLConnectionOperation.m in Sources */,
 				1B58132A1BA89D0E0097EF41 /* InstaUser.m in Sources */,
 				1BB9C6E31B98971900957C11 /* RecentImagesViewController.m in Sources */,
+				1B738B6A1BBF92BC00ED19A1 /* SortedImagesViewController.m in Sources */,
 				1BB9C7421B9E278600957C11 /* UIProgressView+AFNetworking.m in Sources */,
 				1BB9C6E01B98971900957C11 /* AppDelegate.m in Sources */,
 				1BB9C73F1B9E278600957C11 /* UIAlertView+AFNetworking.m in Sources */,
@@ -474,7 +488,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -511,7 +525,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

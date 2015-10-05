@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class InstaUser;
+
 @interface RecentImagesViewController : UIViewController
 
-- (instancetype)initWithUserId:(NSString*) userID;
+- (instancetype)initWithUser:(InstaUser*) user;
+- (instancetype)initWithUserID:(NSString*) userID;
 
 @end
 

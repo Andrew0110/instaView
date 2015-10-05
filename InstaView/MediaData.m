@@ -19,11 +19,11 @@
         NSMutableString *text = [NSMutableString stringWithFormat:@"likes: %ld", _likes];
         NSRange likesRange = NSMakeRange(0, 6);
         NSRange commentsCountRange = NSMakeRange(text.length+1, 8);
-        [text appendFormat:@"\nComments: %ld\n", (long)_commentsCount];
+        [text appendFormat:@" Comments: %ld\n", (long)_commentsCount];
         
-        NSRange boldedRange = NSMakeRange(text.length+1, _username.length);
+        NSRange boldedRange = NSMakeRange(text.length, _username.length);
         if (_username) {
-            [text appendFormat:@"\n%@: %@\n", _username, _caption];
+            [text appendFormat:@"%@: %@\n", _username, _caption];
         } else {
             [text appendString:@"\n"];
         }
@@ -63,6 +63,7 @@
 + (MediaData *)mediaDataFromDict:(NSDictionary *)source {
     MediaData *mediaData = [MediaData new];
     
+    mediaData.mediaID = source[@"id"];
     mediaData.likes = [source[@"likes"][@"count"] longLongValue];
     mediaData.photoURL = [NSURL URLWithString: source[@"images"][@"low_resolution"][@"url"]];
     if ( source[@"caption"] != [NSNull null] ) {

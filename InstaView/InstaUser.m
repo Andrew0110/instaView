@@ -20,4 +20,13 @@
     return user;
 }
 
+- (void)loadDetailsFromDict:(NSDictionary *)source {
+    _userID = source[@"id"];
+    _username = source[@"username"];
+    _fullName = source[@"full_name"];
+    _pictureProfile = [NSURL URLWithString:source[@"profile_picture"]];
+    _mediaCount = [source[@"counts"][@"media"] longLongValue];
+    _followersCount = [source[@"counts"][@"followed_by"] longLongValue];
+}
+
 @end

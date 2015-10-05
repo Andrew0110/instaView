@@ -11,9 +11,14 @@
 @interface InstaUser : NSObject
 
 @property (nonatomic) NSString  *username;
+@property (nonatomic) NSString  *fullName;
 @property (nonatomic) NSString  *userID;
 @property (nonatomic) NSURL     *pictureProfile;
+@property (nonatomic) NSInteger mediaCount;
+@property (nonatomic) NSInteger followersCount;
 
 + (InstaUser *)instaUserFromDict:(NSDictionary *)source;
+
+- (void)loadDetailsFromDict:(NSDictionary *)source;
 
 @end

@@ -12,6 +12,7 @@
 #import "APIManager.h"
 #import "InstaUser.h"
 #import "SearchViewCell.h"
+#import "SortedImagesViewController.h"
 
 
 
@@ -37,7 +38,7 @@ static NSUInteger const kCellHeight = 60;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     _searchView.tableView.dataSource = self;
     _searchView.tableView.delegate = self;
     _searchView.searchBar.delegate = self;
@@ -45,13 +46,14 @@ static NSUInteger const kCellHeight = 60;
     _searchView.tableView.bounces = YES;
     _searchView.tableView.showsVerticalScrollIndicator = YES;
     
+    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    _searchView.searchBar.text = @"Andrew";
+    _searchView.searchBar.text = @"andrew";
 
     _manager = [APIManager sharedManager];
 
-    [_manager searchUsersWithName:@"Andrew" completion:^(NSArray *users) {
+    [_manager searchUsersWithName:@"andrew" completion:^(NSArray *users) {
         _users = users;
         
         [self.searchView.tableView reloadData];
@@ -64,6 +66,7 @@ static NSUInteger const kCellHeight = 60;
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:YES];
+    
 }
 
 #pragma mark - UITableViewDelegate
@@ -73,20 +76,39 @@ static NSUInteger const kCellHeight = 60;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserId:((InstaUser*)_users[indexPath.row]).userID];
+    RecentImagesViewController* recentViewController = [[RecentImagesViewController alloc] initWithUser:_users[indexPath.row]];
+    SortedImagesViewController* sortedViewController = [[SortedImagesViewController alloc] initWithUser:_users[indexPath.row]];
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    
+    recentViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Recent" image:nil tag:1];
+    
+    sortedViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Sorted" image:nil tag:2];
+    
+    tabBarController.viewControllers = [NSArray arrayWithObjects:
+                                        recentViewController,
+                                        sortedViewController,
+                                        nil];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [_searchView.searchBar resignFirstResponder];
     
-    [self.navigationController pushViewController:viewController
+    [self.navigationController pushViewController:tabBarController
                                          animated:YES];
 }
 
 - (void)tableView:(UITableView *)tableView
   willDisplayCell:(UITableViewCell *)cell
-forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+forRowAtIndexPath:(NSIndexPath *)indexPath {
     [(SearchViewCell*)cell configureWithUser:self.users[indexPath.row]];
+    if ( !((InstaUser*)self.users[indexPath.row]).mediaCount ) {
+        NSLog(@"load info");
+        __weak typeof(self) weakSelf = self;
+        [_manager getUserInfoWithUser:self.users[indexPath.row] completion:^() {
+            [(SearchViewCell*)cell configureWithUser:weakSelf.users[indexPath.row]];
+//            [weakSelf.searchView.tableView reloadData];
+        }];
+    }
 }
 
 #pragma mark - UITableViewDataSource

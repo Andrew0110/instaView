@@ -11,6 +11,7 @@
 
 @interface MediaData : NSObject
 
+@property (nonatomic) NSString      *mediaID;
 @property (nonatomic) NSString      *username;
 @property (nonatomic) NSString      *caption;
 @property (nonatomic) NSURL         *photoURL;

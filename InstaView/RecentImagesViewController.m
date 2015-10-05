@@ -12,14 +12,16 @@
 #import "APIManager.h"
 #import "MediaData.h"
 #import "UIImageView+AFNetworking.h"
+#import "InstaUser.h"
 #import <CoreText/CoreText.h>
 
-@interface RecentImagesViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface RecentImagesViewController () <UITableViewDelegate, UITableViewDataSource, UITabBarDelegate>
 
 @property (nonatomic) RecentImagesView* rootView;
-@property (nonatomic) NSMutableArray* loadedData;
 @property (nonatomic) APIManager* manager;
+@property (nonatomic) NSMutableArray* loadedData;
 @property (nonatomic) NSString *instagramUserID;
+@property (nonatomic) NSString *instagramUsername;
 @property (nonatomic) NSURL *nextURL;
 
 @end
@@ -28,13 +30,23 @@
 
 static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 
-- (instancetype)initWithUserId:(NSString *)userID {
+- (instancetype)initWithUser:(InstaUser *)user {
     self = [super init];
     
     if ( self ) {
-        self.instagramUserID = userID;
+        self.instagramUserID = user.userID;
+        self.instagramUsername = user.username;
     }
     
+    return self;
+}
+
+- (instancetype)initWithUserID:(NSString *)userID
+{
+    self = [super init];
+    if (self) {
+        self.instagramUserID = userID;
+    }
     return self;
 }
 
@@ -52,13 +64,13 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     _rootView.tableView.delegate = self;
     
     _manager = [APIManager sharedManager];
-    [_manager setMethod: [NSString stringWithFormat:@"users/%@/media/recent/", _instagramUserID]];
     
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"count", nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"33", @"count", nil];
     
     __weak typeof(self) weakSelf = self;
     
-    [_manager getImagesWithParams:params
+    [_manager getImagesWithUserID:_instagramUserID
+                           params:params
                        completion:^(NSMutableArray *media, NSURL *nextURL)
     {
         [_loadedData addObjectsFromArray:media];
@@ -69,14 +81,19 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
         });
     }
     ];
+    
     [self.rootView.tableView registerClass: [InstagramPhotoCell class]
                       forCellReuseIdentifier: kPhotoCellIdentifier];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
+    [self.tabBarController.navigationItem setRightBarButtonItems:nil];
+
     
     [self.navigationController setNavigationBarHidden:NO];
+    self.navigationController.navigationBar.topItem.title = self.instagramUsername;
 }
 
 #pragma mark - Actions
@@ -148,7 +165,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
             
             NSString *userID = ((MediaData*)_loadedData[textView.tag]).userCommentedIDs[idx];
             if (![userID isEqualToString:self.instagramUserID]) {
-                RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserId:userID];
+                RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserID:userID];
                 [self.navigationController pushViewController:viewController animated:YES];
             }
             *stop = YES;
@@ -158,16 +175,21 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 
 #pragma mark - API actions
 - (void)loadNewImages {
-    [_manager getImagesWithURL:_nextURL
-                    completion:^(NSMutableArray *media, NSURL *nextURL)
-    {
-        [_loadedData addObjectsFromArray:media];
-        _nextURL = nextURL;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.rootView.tableView reloadData];
-        });
+    if (_nextURL) {
+        [_manager getImagesWithURL:_nextURL
+                        completion:^(NSMutableArray *media, NSURL *nextURL)
+        {
+            [_loadedData addObjectsFromArray:media];
+            if (nextURL)
+                _nextURL = nextURL;
+            else
+                _nextURL = nil;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.rootView.tableView reloadData];
+            });
+        }
+        ];
     }
-    ];
 }
 
 
@@ -208,7 +230,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     }
     
     [((InstagramPhotoCell *)cell).photoImgView setImageWithURL:((MediaData*)_loadedData[indexPath.row]).photoURL placeholderImage:[UIImage imageNamed:@"placeholder"]];
-    NSLog(@"%@",((MediaData*)_loadedData[indexPath.row]).photoURL);
+    //NSLog(@"%@",((MediaData*)_loadedData[indexPath.row]).photoURL);
     
     ((InstagramPhotoCell *)cell).textView.tag = indexPath.row;
     ((InstagramPhotoCell *)cell).textView.attributedText = [(MediaData*)_loadedData[indexPath.row] attributedText];
