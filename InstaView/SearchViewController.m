@@ -68,7 +68,7 @@ static NSUInteger const kCellHeight = 60;
     [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutButtonClick)];
     [self.navigationItem setRightBarButtonItem:logoutButton];
     [self.navigationItem setHidesBackButton:YES];
-    self.navigationController.navigationBar.topItem.title = @"Search users";
+    self.navigationItem.title = @"Search users";
     
     [self.navigationController setNavigationBarHidden:NO];
 }
@@ -104,7 +104,7 @@ static NSUInteger const kCellHeight = 60;
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [_searchView.searchBar resignFirstResponder];
-    
+
     [self.navigationController pushViewController:tabBarController
                                          animated:YES];
 }

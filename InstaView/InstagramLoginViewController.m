@@ -15,7 +15,6 @@
     NSString *secret;
     NSString *callback;
     NSMutableData *receivedData;
-    
 }
 
 @property (nonatomic) UIWebView* webView;
@@ -48,7 +47,6 @@
 #pragma mark UIWebViewDelegate
 
 - (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
-
     if ([[[request URL] host] isEqualToString:@"localhost"]) {
         
         NSString* verifier = nil;
@@ -85,8 +83,7 @@
     return YES;
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [receivedData appendData:data];
 }
 
@@ -99,14 +96,14 @@
     [alert show];
     
 }
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:receivedData
                                                                options:0
                                                                  error:nil];
-    
+        
     APIManager* manager = [APIManager sharedManager];
     [manager setAccessToken:[jsonObject objectForKey:@"access_token"]];
+    [manager setCurrentUserID:jsonObject[@"user"][@"id"]];
 
     [self.navigationController pushViewController:[SearchViewController new] animated:YES];
 }

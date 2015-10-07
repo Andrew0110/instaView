@@ -14,7 +14,8 @@
 
 @interface APIManager()
 
-@property (nonatomic) NSString * accessToken;
+@property (nonatomic) NSString* accessToken;
+@property (nonatomic) NSString* userID;
 
 @end
 
@@ -49,6 +50,11 @@ static NSString * const kRedirectURI = @"http://localhost";
 
 - (void)setAccessToken:(NSString *)accessToken {
     _accessToken = accessToken;
+}
+
+- (void)setCurrentUserID:(NSString*)userID {
+    _userID = userID;
+    NSLog(@"%@",_userID);
 }
 
 - (void)logout {

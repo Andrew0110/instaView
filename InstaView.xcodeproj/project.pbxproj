@@ -13,6 +13,7 @@
 		1B58132D1BA9E5F80097EF41 /* SearchViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B58132C1BA9E5F80097EF41 /* SearchViewCell.m */; };
 		1B738B6A1BBF92BC00ED19A1 /* SortedImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B738B691BBF92BC00ED19A1 /* SortedImagesViewController.m */; settings = {ASSET_TAGS = (); }; };
 		1B738B6E1BC4575300ED19A1 /* InstagramLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B738B6D1BC4575300ED19A1 /* InstagramLoginViewController.m */; settings = {ASSET_TAGS = (); }; };
+		1B738B8E1BC5B15700ED19A1 /* SelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B738B8D1BC5B15700ED19A1 /* SelectViewController.m */; settings = {ASSET_TAGS = (); }; };
 		1BB9C6DD1B98971900957C11 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6DC1B98971900957C11 /* main.m */; };
 		1BB9C6E01B98971900957C11 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6DF1B98971900957C11 /* AppDelegate.m */; };
 		1BB9C6E31B98971900957C11 /* RecentImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6E21B98971900957C11 /* RecentImagesViewController.m */; };
@@ -64,6 +65,8 @@
 		1B738B691BBF92BC00ED19A1 /* SortedImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SortedImagesViewController.m; sourceTree = "<group>"; };
 		1B738B6C1BC4575300ED19A1 /* InstagramLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstagramLoginViewController.h; sourceTree = "<group>"; };
 		1B738B6D1BC4575300ED19A1 /* InstagramLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstagramLoginViewController.m; sourceTree = "<group>"; };
+		1B738B8C1BC5B15700ED19A1 /* SelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectViewController.h; sourceTree = "<group>"; };
+		1B738B8D1BC5B15700ED19A1 /* SelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectViewController.m; sourceTree = "<group>"; };
 		1BB9C6D71B98971900957C11 /* InstaView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BB9C6DB1B98971900957C11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BB9C6DC1B98971900957C11 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -201,6 +204,8 @@
 				1BB9C6DF1B98971900957C11 /* AppDelegate.m */,
 				1B738B6C1BC4575300ED19A1 /* InstagramLoginViewController.h */,
 				1B738B6D1BC4575300ED19A1 /* InstagramLoginViewController.m */,
+				1B738B8C1BC5B15700ED19A1 /* SelectViewController.h */,
+				1B738B8D1BC5B15700ED19A1 /* SelectViewController.m */,
 				1B5813271BA895920097EF41 /* Search */,
 				1B69C6891BB03F220012DE62 /* RecentImages */,
 				1B738B6B1BC28F6300ED19A1 /* SortedImages */,
@@ -410,6 +415,7 @@
 				1B738B6E1BC4575300ED19A1 /* InstagramLoginViewController.m in Sources */,
 				1BB9C7391B9E278600957C11 /* AFURLConnectionOperation.m in Sources */,
 				1B58132A1BA89D0E0097EF41 /* InstaUser.m in Sources */,
+				1B738B8E1BC5B15700ED19A1 /* SelectViewController.m in Sources */,
 				1BB9C6E31B98971900957C11 /* RecentImagesViewController.m in Sources */,
 				1B738B6A1BBF92BC00ED19A1 /* SortedImagesViewController.m in Sources */,
 				1BB9C7421B9E278600957C11 /* UIProgressView+AFNetworking.m in Sources */,

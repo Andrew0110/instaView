@@ -27,6 +27,8 @@
     _pictureProfile = [NSURL URLWithString:source[@"profile_picture"]];
     _mediaCount = [source[@"counts"][@"media"] longLongValue];
     _followersCount = [source[@"counts"][@"followed_by"] longLongValue];
+    _followsCount = [source[@"counts"][@"follows"] longLongValue];
+    _indexOfFollowing = _followersCount/_followersCount;
 }
 
 @end

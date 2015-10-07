@@ -26,6 +26,7 @@
                   completion:(void (^)(NSMutableArray*, NSURL*))completion;
 - (void)getUserInfoWithUser:(InstaUser *)user
                completion:(void (^)(void))completion;
+- (void)setCurrentUserID:(NSString*)userID;
 //- (void) getAllImagesWithUserID:(NSString *)userID completion:(void (^)(NSMutableArray*))completion;
 
 @end

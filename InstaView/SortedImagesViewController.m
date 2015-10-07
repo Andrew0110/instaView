@@ -104,7 +104,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     
     [self.tabBarController.navigationItem setRightBarButtonItems:@[choiceButton, sortButton]];
     
-    self.navigationController.navigationBar.topItem.title = self.instagramUsername;
+    self.tabBarController.navigationItem.title = self.instagramUsername;
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor blueColor]};
     self.navigationController.navigationBar.hidden = NO;
     [self.navigationItem setHidesBackButton:NO];

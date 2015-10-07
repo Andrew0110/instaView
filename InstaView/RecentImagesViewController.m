@@ -90,10 +90,11 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     [super viewWillAppear:animated];
 
     [self.tabBarController.navigationItem setRightBarButtonItems:nil];
-    [self.navigationItem setHidesBackButton:NO];
     
+    self.tabBarController.navigationItem.title = self.instagramUsername;
     [self.navigationController setNavigationBarHidden:NO];
-    self.navigationController.navigationBar.topItem.title = self.instagramUsername;
+
+    [self.navigationItem setHidesBackButton:NO];
 }
 
 #pragma mark - Actions

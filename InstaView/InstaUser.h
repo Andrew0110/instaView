@@ -16,6 +16,8 @@
 @property (nonatomic) NSURL     *pictureProfile;
 @property (nonatomic) NSInteger mediaCount;
 @property (nonatomic) NSInteger followersCount;
+@property (nonatomic) NSInteger followsCount;
+@property (nonatomic) float indexOfFollowing;
 
 + (InstaUser *)instaUserFromDict:(NSDictionary *)source;
 
