@@ -15,6 +15,9 @@
 
 + (APIManager *)sharedManager;
 
+- (void)setAccessToken:(NSString *)accessToken;
+- (void)logout;
+
 - (void)getImagesWithParams:(NSDictionary *)parameters completion:(void (^)(NSMutableArray *, NSURL*))completion;
 - (void)searchUsersWithName:(NSString*)name completion:(void (^)(NSArray *))completion;
 - (void)getImagesWithURL:(NSURL *)url completion:(void (^)(NSMutableArray *, NSURL *))completion;

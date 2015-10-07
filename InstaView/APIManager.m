@@ -14,7 +14,7 @@
 
 @interface APIManager()
 
-@property (nonatomic) NSString * requestMethod;
+@property (nonatomic) NSString * accessToken;
 
 @end
 
@@ -22,6 +22,19 @@
 
 static NSString * const kBaseURL = @"https://api.instagram.com/v1/";
 static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac276f8f7c08d461";
+static NSString * const kClientID = @"a5e3084950fe4b978087777c1edd1098";
+static NSString * const kClientSecret = @"4600695c7a6d46f38d4bef47df57c3f0";
+static NSString * const kRedirectURI = @"http://localhost";
+
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+//        _accessToken = kAccessToken;
+    }
+    
+    return self;
+}
 
 + (APIManager *)sharedManager {
     static APIManager *manager = nil;
@@ -34,14 +47,27 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
     return manager;
 }
 
+- (void)setAccessToken:(NSString *)accessToken {
+    _accessToken = accessToken;
+}
+
+- (void)logout {
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    [[storage cookies] enumerateObjectsUsingBlock:^(NSHTTPCookie *cookie, NSUInteger idx, BOOL *stop) {
+        [storage deleteCookie:cookie];
+    }];
+    
+    self.accessToken = nil;
+}
+
 - (void) getImagesWithParams:(NSDictionary *)parameters completion:(void (^)(NSMutableArray*, NSURL*))completion {
     NSURL *url;
-    NSMutableString *request = [NSMutableString stringWithFormat:@"%@%@?",kBaseURL, _requestMethod];
+    NSMutableString *request = [NSMutableString stringWithFormat:@"%@media/recent/?",kBaseURL];
     
     for ( NSString *key in parameters.allKeys ) {
         [request appendString:[NSString stringWithFormat:@"%@=%@&", key, [parameters objectForKey:key]]];
     }
-    [request appendString:[NSString stringWithFormat:@"access_token=%@", kAccessToken]];
+    [request appendString:[NSString stringWithFormat:@"access_token=%@", _accessToken]];
 
     url = [NSURL URLWithString:request];
     
@@ -57,7 +83,7 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
     for ( NSString *key in parameters.allKeys ) {
         [request appendString:[NSString stringWithFormat:@"%@=%@&", key, [parameters objectForKey:key]]];
     }
-    [request appendString:[NSString stringWithFormat:@"access_token=%@", kAccessToken]];
+    [request appendString:[NSString stringWithFormat:@"access_token=%@", _accessToken]];
     
     url = [NSURL URLWithString:request];
     
@@ -67,7 +93,7 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
 - (void) searchUsersWithName:(NSString*)name completion:(void (^)(NSArray *))completion {
     [[AFHTTPRequestOperationManager manager] GET: [NSString stringWithFormat:@"%@users/search/", kBaseURL]
                                       parameters:@{@"q":name,
-                                                   @"access_token": kAccessToken}
+                                                   @"access_token": _accessToken}
                                          success:^(AFHTTPRequestOperation * operation, id response) {
                                              if ([response isKindOfClass: [NSDictionary class]]) {
                                                  NSMutableArray *instaUsers = [NSMutableArray array];
@@ -117,7 +143,7 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
 - (void)getUserInfoWithUser:(InstaUser *)user
                completion:(void (^)(void))completion {
     [[AFHTTPRequestOperationManager manager] GET:[NSString stringWithFormat:@"%@users/%@/", kBaseURL, user.userID]
-                                      parameters:@{@"access_token": kAccessToken}
+                                      parameters:@{@"access_token": _accessToken}
                                          success:^(AFHTTPRequestOperation * operation, id response) {
                                              if ([response isKindOfClass: [NSDictionary class]]) {
                                                  [user loadDetailsFromDict:response[@"data"]];
@@ -130,29 +156,30 @@ static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac27
 
 }
 
+
 // How to stop completion block, when ViewController release?
-- (void) getAllImagesWithUserID:(NSString *)userID completion:(void (^)(NSMutableArray*))completion {
-    NSMutableArray* loadedMedia = [NSMutableArray new];
-    NSDictionary* params = [NSDictionary dictionaryWithObjectsAndKeys:@"36", @"count", nil];
-    
-    __block void (^completionBlock)(NSMutableArray*, NSURL*) = ^(NSMutableArray* media, NSURL* nextURL){
-        NSLog(@"Next url: %@ Count of media: %lu", nextURL, (unsigned long)media.count);
-        if (nextURL) {
-            [loadedMedia addObjectsFromArray:media];
-            [self getImagesWithURL:nextURL
-                        completion:completionBlock];
-        } else {
-            [loadedMedia addObjectsFromArray:media];
-            completion(loadedMedia);
-        }
-    };
-    if (completion) {
-        [self getImagesWithUserID:userID
-                           params:params
-                       completion:completionBlock];
-    }
-    
-}
+//- (void) getAllImagesWithUserID:(NSString *)userID completion:(void (^)(NSMutableArray*))completion {
+//    NSMutableArray* loadedMedia = [NSMutableArray new];
+//    NSDictionary* params = [NSDictionary dictionaryWithObjectsAndKeys:@"36", @"count", nil];
+//    
+//    __block void (^completionBlock)(NSMutableArray*, NSURL*) = ^(NSMutableArray* media, NSURL* nextURL){
+//        NSLog(@"Next url: %@ Count of media: %lu", nextURL, (unsigned long)media.count);
+//        if (nextURL) {
+//            [loadedMedia addObjectsFromArray:media];
+//            [self getImagesWithURL:nextURL
+//                        completion:completionBlock];
+//        } else {
+//            [loadedMedia addObjectsFromArray:media];
+//            completion(loadedMedia);
+//        }
+//    };
+//    if (completion) {
+//        [self getImagesWithUserID:userID
+//                           params:params
+//                       completion:completionBlock];
+//    }
+//    
+//}
 
 
 @end

@@ -19,11 +19,10 @@
         [self addSubview:_photoImgView];
         
         _textView = [UITextView new];
-        
         _textView.textContainerInset = UIEdgeInsetsZero;
         _textView.textContainer.lineFragmentPadding = 0;
-
         _textView.scrollEnabled = NO;
+        _textView.selectable    = NO;
         _textView.editable      = NO;
         [self addSubview:_textView];
     }

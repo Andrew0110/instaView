@@ -28,13 +28,13 @@ static CGFloat const kSearchBarHeight = 44;
     return self;
 }
 
-- (void) layoutSubviews {
+- (void)layoutSubviews {
     [super layoutSubviews];
     
     const CGFloat width = self.bounds.size.width;
     const CGFloat height = self.bounds.size.height;
     
-    CGFloat yOffset = 20;
+    CGFloat yOffset = 0;
     
     _searchBar.frame = CGRectMake(0, yOffset, width, kSearchBarHeight);
     yOffset += CGRectGetHeight(_searchBar.frame);

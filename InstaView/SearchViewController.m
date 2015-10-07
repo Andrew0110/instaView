@@ -46,18 +46,17 @@ static NSUInteger const kCellHeight = 60;
     _searchView.tableView.bounces = YES;
     _searchView.tableView.showsVerticalScrollIndicator = YES;
     
-    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    _searchView.searchBar.text = @"andrew";
+    _searchView.searchBar.text = @"";
 
     _manager = [APIManager sharedManager];
 
-    [_manager searchUsersWithName:@"andrew" completion:^(NSArray *users) {
-        _users = users;
-        
-        [self.searchView.tableView reloadData];
-    }];
+//    [_manager searchUsersWithName:@"" completion:^(NSArray *users) {
+//        _users = users;
+//        
+//        [self.searchView.tableView reloadData];
+//    }];
     [self.searchView.tableView registerClass: [SearchViewCell class]
                       forCellReuseIdentifier: kSearchCellIdentifier];
 }
@@ -65,8 +64,21 @@ static NSUInteger const kCellHeight = 60;
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.navigationController setNavigationBarHidden:YES];
+    UIBarButtonItem* logoutButton =
+    [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutButtonClick)];
+    [self.navigationItem setRightBarButtonItem:logoutButton];
+    [self.navigationItem setHidesBackButton:YES];
+    self.navigationController.navigationBar.topItem.title = @"Search users";
     
+    [self.navigationController setNavigationBarHidden:NO];
+}
+
+#pragma mark - Actions
+
+- (void)logoutButtonClick {
+    APIManager* manager = [APIManager sharedManager];
+    [manager logout];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 #pragma mark - UITableViewDelegate
@@ -102,7 +114,6 @@ static NSUInteger const kCellHeight = 60;
 forRowAtIndexPath:(NSIndexPath *)indexPath {
     [(SearchViewCell*)cell configureWithUser:self.users[indexPath.row]];
     if ( !((InstaUser*)self.users[indexPath.row]).mediaCount ) {
-        NSLog(@"load info");
         __weak typeof(self) weakSelf = self;
         [_manager getUserInfoWithUser:self.users[indexPath.row] completion:^() {
             [(SearchViewCell*)cell configureWithUser:weakSelf.users[indexPath.row]];

@@ -105,15 +105,15 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     [self.tabBarController.navigationItem setRightBarButtonItems:@[choiceButton, sortButton]];
     
     self.navigationController.navigationBar.topItem.title = self.instagramUsername;
-    
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor blueColor]};
     self.navigationController.navigationBar.hidden = NO;
+    [self.navigationItem setHidesBackButton:NO];
 }
 
 #pragma mark - Actions
 
 - (void)choiceButtonClick:(UIBarButtonItem*)sender {
-    if ( [_sortBy isEqualToString:@"comments"] ) {
+    if ( [_sortBy isEqualToString:@"commentsCount"] ) {
         _sortBy = @"likes";
         sender.title = @"Likes";
     } else {
