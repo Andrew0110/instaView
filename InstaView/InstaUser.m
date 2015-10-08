@@ -28,7 +28,11 @@
     _mediaCount = [source[@"counts"][@"media"] longLongValue];
     _followersCount = [source[@"counts"][@"followed_by"] longLongValue];
     _followsCount = [source[@"counts"][@"follows"] longLongValue];
-    _indexOfFollowing = _followersCount/_followersCount;
+    if (_followsCount && _followsCount > 0) {
+        _indexOfFollowing = _followersCount/_followsCount;
+    } else {
+        _indexOfFollowing = 0;
+    }
 }
 
 @end

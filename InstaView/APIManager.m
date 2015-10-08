@@ -15,18 +15,14 @@
 @interface APIManager()
 
 @property (nonatomic) NSString* accessToken;
-@property (nonatomic) NSString* userID;
+@property (nonatomic) NSString* currentUserID;
 
 @end
 
 @implementation APIManager
 
+//static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac276f8f7c08d461";
 static NSString * const kBaseURL = @"https://api.instagram.com/v1/";
-static NSString * const kAccessToken = @"2162679026.a5e3084.7892c75453b04d4bac276f8f7c08d461";
-static NSString * const kClientID = @"a5e3084950fe4b978087777c1edd1098";
-static NSString * const kClientSecret = @"4600695c7a6d46f38d4bef47df57c3f0";
-static NSString * const kRedirectURI = @"http://localhost";
-
 
 - (instancetype)init {
     self = [super init];
@@ -53,8 +49,7 @@ static NSString * const kRedirectURI = @"http://localhost";
 }
 
 - (void)setCurrentUserID:(NSString*)userID {
-    _userID = userID;
-    NSLog(@"%@",_userID);
+    _currentUserID = userID;
 }
 
 - (void)logout {
@@ -160,6 +155,91 @@ static NSString * const kRedirectURI = @"http://localhost";
                                          }
                                          failure:nil];
 
+}
+
+- (void)getUsersWithURL:(NSURL *)url
+                 completion:(void (^)(NSMutableArray*, NSURL*))completion {
+    [[AFHTTPRequestOperationManager manager] GET:[url absoluteString]
+                                      parameters:nil
+                                         success:^(AFHTTPRequestOperation * operation, id response) {
+                                             if ([response isKindOfClass: [NSDictionary class]]) {
+                                                 NSURL* nextURL = [NSURL URLWithString:response[@"pagination"][@"next_url"]];
+                                                 NSMutableArray *instaUsers = [NSMutableArray array];
+                                                 for ( NSDictionary *dict in response[@"data"] ) {
+                                                     [instaUsers addObject:[InstaUser instaUserFromDict:dict]];
+                                                 }
+                                                 if (completion) {
+                                                     completion(instaUsers, nextURL);
+                                                 }
+                                             }
+                                         }
+                                         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                             UIAlertView *alertView = [[UIAlertView alloc]
+                                                                       initWithTitle:@"Error"
+                                                                       message:@"Sorry. Back and try again"
+                                                                       delegate:nil
+                                                                       cancelButtonTitle:@"Ok"
+                                                                       otherButtonTitles:nil];
+                                             
+                                             [alertView show];
+                                         }];
+
+}
+
+- (void)getFollowsWithCompletion:(void (^)(NSMutableArray*, NSURL*))completion {
+    [[AFHTTPRequestOperationManager manager] GET:[NSString stringWithFormat:@"%@users/%@/follows?", kBaseURL, _currentUserID]
+                                      parameters:@{@"access_token": _accessToken}
+                                         success:^(AFHTTPRequestOperation * operation, id response) {
+                                             if ([response isKindOfClass: [NSDictionary class]]) {
+                                                 NSURL* nextURL = [NSURL URLWithString:response[@"pagination"][@"next_url"]];
+                                                 NSMutableArray *instaUsers = [NSMutableArray array];
+                                                 for ( NSDictionary *dict in response[@"data"] ) {
+                                                     [instaUsers addObject:[InstaUser instaUserFromDict:dict]];
+                                                 }
+                                                 if (completion) {
+                                                     completion(instaUsers, nextURL);
+                                                 }
+                                             }
+                                         }
+                                         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                             UIAlertView *alertView = [[UIAlertView alloc]
+                                                                       initWithTitle:@"Error"
+                                                                       message:@"Sorry. You can't look this account"
+                                                                       delegate:nil
+                                                                       cancelButtonTitle:@"Ok"
+                                                                       otherButtonTitles:nil];
+                                             
+                                             [alertView show];
+                                         }];
+
+}
+
+- (void)getFollowersWithCompletion:(void (^)(NSMutableArray*, NSURL*))completion {
+    [[AFHTTPRequestOperationManager manager] GET:[NSString stringWithFormat:@"%@users/%@/followed-by?", kBaseURL, _currentUserID]
+                                      parameters:@{@"access_token": _accessToken}
+                                         success:^(AFHTTPRequestOperation* operation, id response) {
+                                             if ([response isKindOfClass: [NSDictionary class]]) {
+                                                 NSURL* nextURL = [NSURL URLWithString:response[@"pagination"][@"next_url"]];
+                                                 NSMutableArray *instaUsers = [NSMutableArray array];
+                                                 for ( NSDictionary *dict in response[@"data"] ) {
+                                                     [instaUsers addObject:[InstaUser instaUserFromDict:dict]];
+                                                 }
+                                                 if (completion) {
+                                                     completion(instaUsers, nextURL);
+                                                 }
+                                             }
+                                         }
+                                         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                             UIAlertView *alertView = [[UIAlertView alloc]
+                                                                       initWithTitle:@"Error"
+                                                                       message:@"Sorry. Error"
+                                                                       delegate:nil
+                                                                       cancelButtonTitle:@"Ok"
+                                                                       otherButtonTitles:nil];
+                                             
+                                             [alertView show];
+                                         }];
+    
 }
 
 

@@ -66,6 +66,24 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
                     forCellReuseIdentifier: kPhotoCellIdentifier];
 }
 
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    UIBarButtonItem* sortButton =
+    [[UIBarButtonItem alloc] initWithTitle:@"↓" style:UIBarButtonItemStylePlain target:self action:@selector(sortButtonClick:)];
+    UIBarButtonItem* choiceButton = [[UIBarButtonItem alloc] initWithTitle:@"Likes" style:UIBarButtonItemStylePlain target:self action:@selector(choiceButtonClick:)];
+    
+    [self.tabBarController.navigationItem setRightBarButtonItems:@[choiceButton, sortButton]];
+    
+    self.tabBarController.navigationItem.title = self.instagramUsername;
+    //    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor blueColor]};
+    self.navigationController.navigationBar.hidden = NO;
+    [self.navigationItem setHidesBackButton:NO];
+}
+
+#pragma mark - API actions
+
 - (void) getAllImages {
     __weak typeof(self) weakSelf = self;
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"33", @"count", nil];
@@ -93,21 +111,6 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     } else {
         [_manager getImagesWithURL:_nextURL completion:completionBlock];
     }
-}
-
-- (void) viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    UIBarButtonItem* sortButton =
-    [[UIBarButtonItem alloc] initWithTitle:@"↓" style:UIBarButtonItemStylePlain target:self action:@selector(sortButtonClick:)];
-    UIBarButtonItem* choiceButton = [[UIBarButtonItem alloc] initWithTitle:@"Likes" style:UIBarButtonItemStylePlain target:self action:@selector(choiceButtonClick:)];
-    
-    [self.tabBarController.navigationItem setRightBarButtonItems:@[choiceButton, sortButton]];
-    
-    self.tabBarController.navigationItem.title = self.instagramUsername;
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor blueColor]};
-    self.navigationController.navigationBar.hidden = NO;
-    [self.navigationItem setHidesBackButton:NO];
 }
 
 #pragma mark - Actions

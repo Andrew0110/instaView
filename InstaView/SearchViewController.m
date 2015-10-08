@@ -19,7 +19,6 @@
 @interface SearchViewController () <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate>
 
 @property (nonatomic) SearchView* searchView;
-
 @property (nonatomic) NSArray *users;
 @property (nonatomic) APIManager *manager;
 
@@ -52,11 +51,6 @@ static NSUInteger const kCellHeight = 60;
 
     _manager = [APIManager sharedManager];
 
-//    [_manager searchUsersWithName:@"" completion:^(NSArray *users) {
-//        _users = users;
-//        
-//        [self.searchView.tableView reloadData];
-//    }];
     [self.searchView.tableView registerClass: [SearchViewCell class]
                       forCellReuseIdentifier: kSearchCellIdentifier];
 }
@@ -67,10 +61,10 @@ static NSUInteger const kCellHeight = 60;
     UIBarButtonItem* logoutButton =
     [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutButtonClick)];
     [self.navigationItem setRightBarButtonItem:logoutButton];
-    [self.navigationItem setHidesBackButton:YES];
+    [self.navigationItem setHidesBackButton:NO];
     self.navigationItem.title = @"Search users";
     
-    [self.navigationController setNavigationBarHidden:NO];
+//    [self.navigationController setNavigationBarHidden:NO];
 }
 
 #pragma mark - Actions

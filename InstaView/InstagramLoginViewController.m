@@ -9,37 +9,29 @@
 #import "InstagramLoginViewController.h"
 #import "SearchViewController.h"
 #import "APIManager.h"
+#import "SelectViewController.h"
 
-@interface InstagramLoginViewController ()<UIWebViewDelegate>{
-    NSString *client_id;
-    NSString *secret;
-    NSString *callback;
-    NSMutableData *receivedData;
-}
+@interface InstagramLoginViewController ()<UIWebViewDelegate>
 
+@property (nonatomic) NSMutableData* receivedData;
 @property (nonatomic) UIWebView* webView;
 @property (nonatomic, retain) NSString *isLogin;
-
 
 @end
 
 @implementation InstagramLoginViewController
+
+static NSString * const kClientID = @"a5e3084950fe4b978087777c1edd1098";
+static NSString * const kClientSecret = @"4600695c7a6d46f38d4bef47df57c3f0";
+static NSString * const kRedirectURI = @"http://localhost";
 
 - (void) loadView {
     _webView = [UIWebView new];
     self.view = _webView;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    client_id = @"a5e3084950fe4b978087777c1edd1098";
-    secret = @"4600695c7a6d46f38d4bef47df57c3f0";
-    callback = @"http://localhost";
-}
-
 - (void)viewWillAppear:(BOOL)animated {
-    NSString *url = [NSString stringWithFormat:@"https://api.instagram.com/oauth/authorize/?client_id=%@&redirect_uri=%@&response_type=code", client_id, callback];
+    NSString *url = [NSString stringWithFormat:@"https://api.instagram.com/oauth/authorize/?client_id=%@&redirect_uri=%@&response_type=code", kClientID, kRedirectURI];
     _webView.delegate = self;
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
@@ -62,7 +54,7 @@
         
         if (verifier) {
             
-            NSString *data = [NSString stringWithFormat:@"client_id=%@&client_secret=%@&grant_type=authorization_code&redirect_uri=%@&code=%@",client_id,secret,callback,verifier];
+            NSString *data = [NSString stringWithFormat:@"client_id=%@&client_secret=%@&grant_type=authorization_code&redirect_uri=%@&code=%@", kClientID, kClientSecret, kRedirectURI, verifier];
             
             NSString *url = [NSString stringWithFormat:@"https://api.instagram.com/oauth/access_token"];
             
@@ -71,7 +63,7 @@
             [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
             NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:request delegate:self];
             [theConnection start];
-            receivedData = [[NSMutableData alloc] init];
+            _receivedData = [[NSMutableData alloc] init];
         } else {
             NSLog(@"err");
         }
@@ -84,7 +76,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [receivedData appendData:data];
+    [_receivedData appendData:data];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
@@ -97,7 +89,7 @@
     
 }
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:receivedData
+    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:_receivedData
                                                                options:0
                                                                  error:nil];
         
@@ -105,7 +97,7 @@
     [manager setAccessToken:[jsonObject objectForKey:@"access_token"]];
     [manager setCurrentUserID:jsonObject[@"user"][@"id"]];
 
-    [self.navigationController pushViewController:[SearchViewController new] animated:YES];
+    [self.navigationController pushViewController:[SelectViewController new] animated:YES];
 }
 
 @end
