@@ -16,7 +16,7 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         
-        _tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
         [self addSubview:_tableView];
     }
     return self;

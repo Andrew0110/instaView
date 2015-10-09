@@ -69,19 +69,15 @@ static NSUInteger const kCellHeight = 60;
     __weak typeof(self) weakSelf = self;
     
     __block void (^completionBlock)(NSMutableArray*, NSURL*) = ^(NSMutableArray* users, NSURL* nextURL){
-        //NSLog(@"Next url: %@ Count of users: %lu", nextURL, (unsigned long)users.count);
+//        NSLog(@"Next url: %@ Count of users: %lu", nextURL, (unsigned long)users.count);
+        for ( InstaUser* user in users ) {
+            [weakSelf.followers setValue:user forKey:user.userID];
+        }
         if (nextURL) {
-            for ( InstaUser* user in users ) {
-                [weakSelf.followers setValue:user forKey:user.userID];
-            }
             weakSelf.nextFollowersURL = nextURL;
             [weakSelf getAllFollowers];
         } else {
-            for ( InstaUser* user in users ) {
-                [weakSelf.followers setValue:user forKey:user.userID];
-            }
             weakSelf.isFollowersLoaded = YES;
-            
             if ( weakSelf.isFollowsLoaded ) {
                 [weakSelf findFollowRecommendList];
                 [weakSelf findUnfollowRecommendList];
@@ -99,18 +95,14 @@ static NSUInteger const kCellHeight = 60;
     __weak typeof(self) weakSelf = self;
     
     __block void (^completionBlock)(NSMutableArray*, NSURL*) = ^(NSMutableArray* users, NSURL* nextURL){
-        //NSLog(@"Next url: %@ Count of users: %lu", nextURL, (unsigned long)users.count);
+//        NSLog(@"Follows Next url: %@ Count of users: %lu", nextURL, (unsigned long)users.count);
+        for ( InstaUser* user in users ) {
+            [weakSelf.follows setValue:user forKey:user.userID];
+        }
         if (nextURL) {
-            for ( InstaUser* user in users ) {
-                [weakSelf.follows setValue:user forKey:user.userID];
-            }
             weakSelf.nextFollowsURL = nextURL;
             [weakSelf getAllFollows];
         } else {
-            for ( InstaUser* user in users ) {
-                [weakSelf.followers setValue:user forKey:user.userID];
-            }
-            
             weakSelf.isFollowsLoaded = YES;
             
             if ( weakSelf.isFollowersLoaded ) {
@@ -120,7 +112,7 @@ static NSUInteger const kCellHeight = 60;
         }
     };
     if (!_nextFollowsURL) {
-        [_manager getFollowersWithCompletion:completionBlock];
+        [_manager getFollowsWithCompletion:completionBlock];
     } else {
         [_manager getUsersWithURL:_nextFollowsURL completion:completionBlock];
     }
@@ -129,9 +121,10 @@ static NSUInteger const kCellHeight = 60;
 #pragma mark - FollowersActions
 
 - (void)findUnfollowRecommendList {
+    _recommendUnfollowList = [NSMutableArray array];
     for ( NSString* userID in [self.follows allKeys] ) {
         if ( ![[self.followers allKeys] containsObject:userID] ) {
-            [self.recommendUnfollowList addObject:[self.followers objectForKey:userID]];
+            [self.recommendUnfollowList addObject:[self.follows objectForKey:userID]];
         }
     }
     
@@ -152,6 +145,8 @@ static NSUInteger const kCellHeight = 60;
 //    NSLog(@"Followers (%lu): %@", (unsigned long)_followers.count, followers);
 //    NSLog(@"Follows (%lu): %@", (unsigned long)_follows.count, follows);
     
+    
+    _recommendFollowList = [NSMutableArray array];
     for ( NSString* userID in [self.followers allKeys] ) {
         if ( ![[self.follows allKeys] containsObject:userID] ) {
             [self.recommendFollowList addObject:[self.followers objectForKey:userID]];
@@ -176,12 +171,15 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     } else if ( indexPath.section == 1 ) {
         user = (InstaUser*)self.recommendUnfollowList[indexPath.row];
     }
-    
     [(SearchViewCell*)cell configureWithUser:user];
     if ( !user.mediaCount ) {
         __weak typeof(self) weakSelf = self;
         [_manager getUserInfoWithUser:user completion:^() {
-            [(SearchViewCell*)cell configureWithUser:weakSelf.recommendFollowList[indexPath.row]];
+            if ( indexPath.section == 0 ) {
+                [(SearchViewCell*)cell configureWithUser:weakSelf.recommendFollowList[indexPath.row]];
+            } else if ( indexPath.section == 1 ) {
+                [(SearchViewCell*)cell configureWithUser:weakSelf.recommendUnfollowList[indexPath.row]];
+            }
         }];
     }
 }

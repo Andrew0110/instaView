@@ -90,13 +90,11 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 
     __block void (^completionBlock)(NSMutableArray*, NSURL*) = ^(NSMutableArray* media, NSURL* nextURL){
         NSLog(@"Next url: %@ Count of media: %lu", nextURL, (unsigned long)media.count);
+        [weakSelf.loadedData addObjectsFromArray:media];
         if (nextURL) {
-            [weakSelf.loadedData addObjectsFromArray:media];
             weakSelf.nextURL = nextURL;
             [weakSelf getAllImages];
         } else {
-            [weakSelf.loadedData addObjectsFromArray:media];
-            
             [weakSelf.loadedData sortUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO]]];
             
             dispatch_async(dispatch_get_main_queue(), ^{
