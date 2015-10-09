@@ -13,12 +13,12 @@
 
 @interface APIManager : NSObject
 
+@property (nonatomic) NSString* currentUserID;
+
 + (APIManager *)sharedManager;
 
 - (void)setAccessToken:(NSString *)accessToken;
 - (void)setCurrentUserID:(NSString*)userID;
-
-
 
 - (void)getImagesWithParams:(NSDictionary *)parameters completion:(void (^)(NSMutableArray *, NSURL*))completion;
 - (void)getImagesWithURL:(NSURL *)url completion:(void (^)(NSMutableArray *, NSURL *))completion;

@@ -17,6 +17,7 @@
 		1B738B931BC6B75500ED19A1 /* SelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B738B921BC6B75500ED19A1 /* SelectView.m */; settings = {ASSET_TAGS = (); }; };
 		1B738B961BC6D7C700ED19A1 /* RecommendFollowersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B738B951BC6D7C700ED19A1 /* RecommendFollowersViewController.m */; settings = {ASSET_TAGS = (); }; };
 		1B738B9A1BC6D9BD00ED19A1 /* RecommendFollowersView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B738B991BC6D9BD00ED19A1 /* RecommendFollowersView.m */; settings = {ASSET_TAGS = (); }; };
+		1B738B9D1BC8001700ED19A1 /* UserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B738B9C1BC8001700ED19A1 /* UserInfoCell.m */; settings = {ASSET_TAGS = (); }; };
 		1BB9C6DD1B98971900957C11 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6DC1B98971900957C11 /* main.m */; };
 		1BB9C6E01B98971900957C11 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6DF1B98971900957C11 /* AppDelegate.m */; };
 		1BB9C6E31B98971900957C11 /* RecentImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9C6E21B98971900957C11 /* RecentImagesViewController.m */; };
@@ -76,6 +77,8 @@
 		1B738B951BC6D7C700ED19A1 /* RecommendFollowersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendFollowersViewController.m; sourceTree = "<group>"; };
 		1B738B981BC6D9BD00ED19A1 /* RecommendFollowersView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendFollowersView.h; sourceTree = "<group>"; };
 		1B738B991BC6D9BD00ED19A1 /* RecommendFollowersView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendFollowersView.m; sourceTree = "<group>"; };
+		1B738B9B1BC8001700ED19A1 /* UserInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoCell.h; sourceTree = "<group>"; };
+		1B738B9C1BC8001700ED19A1 /* UserInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoCell.m; sourceTree = "<group>"; };
 		1BB9C6D71B98971900957C11 /* InstaView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BB9C6DB1B98971900957C11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BB9C6DC1B98971900957C11 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -244,6 +247,8 @@
 				1BB9C7221B9E278600957C11 /* UIKit+AFNetworking */,
 				1BB9C6DE1B98971900957C11 /* AppDelegate.h */,
 				1BB9C6DF1B98971900957C11 /* AppDelegate.m */,
+				1B738B9B1BC8001700ED19A1 /* UserInfoCell.h */,
+				1B738B9C1BC8001700ED19A1 /* UserInfoCell.m */,
 				1B738B8F1BC6B6C500ED19A1 /* InstagramLogin */,
 				1B738B901BC6B70000ED19A1 /* Select */,
 				1B5813271BA895920097EF41 /* Search */,
@@ -458,6 +463,7 @@
 				1B738B8E1BC5B15700ED19A1 /* SelectViewController.m in Sources */,
 				1BB9C6E31B98971900957C11 /* RecentImagesViewController.m in Sources */,
 				1B738B6A1BBF92BC00ED19A1 /* SortedImagesViewController.m in Sources */,
+				1B738B9D1BC8001700ED19A1 /* UserInfoCell.m in Sources */,
 				1BB9C7421B9E278600957C11 /* UIProgressView+AFNetworking.m in Sources */,
 				1BB9C6E01B98971900957C11 /* AppDelegate.m in Sources */,
 				1BB9C73F1B9E278600957C11 /* UIAlertView+AFNetworking.m in Sources */,

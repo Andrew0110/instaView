@@ -28,6 +28,8 @@
     _mediaCount = [source[@"counts"][@"media"] longLongValue];
     _followersCount = [source[@"counts"][@"followed_by"] longLongValue];
     _followsCount = [source[@"counts"][@"follows"] longLongValue];
+    _biography = source[@"bio"];
+    _website = [NSURL URLWithString:source[@"website"]];
     if (_followsCount && _followsCount > 0) {
         _indexOfFollowing = _followersCount/_followsCount;
     } else {

@@ -15,7 +15,6 @@
 @interface APIManager()
 
 @property (nonatomic) NSString* accessToken;
-@property (nonatomic) NSString* currentUserID;
 
 @end
 

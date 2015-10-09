@@ -13,10 +13,12 @@
 @property (nonatomic) NSString  *username;
 @property (nonatomic) NSString  *fullName;
 @property (nonatomic) NSString  *userID;
+@property (nonatomic) NSString  *biography;
 @property (nonatomic) NSURL     *pictureProfile;
 @property (nonatomic) NSInteger mediaCount;
 @property (nonatomic) NSInteger followersCount;
 @property (nonatomic) NSInteger followsCount;
+@property (nonatomic) NSURL     *website;
 @property (nonatomic) float indexOfFollowing;
 
 + (InstaUser *)instaUserFromDict:(NSDictionary *)source;

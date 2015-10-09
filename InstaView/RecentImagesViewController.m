@@ -9,6 +9,7 @@
 #import "RecentImagesViewController.h"
 #import "RecentImagesView.h"
 #import "InstagramPhotoCell.h"
+#import "UserInfoCell.h"
 #import "APIManager.h"
 #import "MediaData.h"
 #import "UIImageView+AFNetworking.h"
@@ -20,9 +21,8 @@
 @property (nonatomic) RecentImagesView* rootView;
 @property (nonatomic) APIManager* manager;
 @property (nonatomic) NSMutableArray* loadedData;
-@property (nonatomic) NSString *instagramUserID;
-@property (nonatomic) NSString *instagramUsername;
-@property (nonatomic) NSURL *nextURL;
+@property (nonatomic) InstaUser* user;
+@property (nonatomic) NSURL* nextURL;
 
 @end
 
@@ -34,8 +34,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     self = [super init];
     
     if ( self ) {
-        self.instagramUserID = user.userID;
-        self.instagramUsername = user.username;
+        _user = user;
     }
     
     return self;
@@ -45,7 +44,8 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 {
     self = [super init];
     if (self) {
-        self.instagramUserID = userID;
+        _user = [InstaUser new];
+        _user.userID = userID;
     }
     return self;
 }
@@ -69,7 +69,14 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
     
     __weak typeof(self) weakSelf = self;
     
-    [_manager getImagesWithUserID:_instagramUserID
+    [_manager getUserInfoWithUser:_user completion:^() {
+        [weakSelf.rootView.tableView reloadData];
+        weakSelf.tabBarController.navigationItem.title = weakSelf.user.username;
+        weakSelf.navigationItem.title = weakSelf.user.username;
+
+    }];
+    
+    [_manager getImagesWithUserID:_user.userID
                            params:params
                        completion:^(NSMutableArray *media, NSURL *nextURL)
     {
@@ -91,7 +98,8 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 
     [self.tabBarController.navigationItem setRightBarButtonItems:nil];
     
-    self.tabBarController.navigationItem.title = self.instagramUsername;
+    self.tabBarController.navigationItem.title = self.user.username;
+    self.navigationItem.title = self.user.username;
     [self.navigationController setNavigationBarHidden:NO];
 
     [self.navigationItem setHidesBackButton:NO];
@@ -165,7 +173,7 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
         if (NSLocationInRange(indexOfCharacter, value.rangeValue)) {
             
             NSString *userID = ((MediaData*)_loadedData[textView.tag]).userCommentedIDs[idx];
-            if (![userID isEqualToString:self.instagramUserID]) {
+            if (![userID isEqualToString:self.user.userID]) {
                 RecentImagesViewController* viewController = [[RecentImagesViewController alloc] initWithUserID:userID];
                 [self.navigationController pushViewController:viewController animated:YES];
             }
@@ -197,12 +205,18 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_loadedData count];
+    return [_loadedData count]+1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    InstagramPhotoCell *cell = [tableView dequeueReusableCellWithIdentifier:kPhotoCellIdentifier
-                                                               forIndexPath:indexPath];
+    UITableViewCell* cell;
+    if ( indexPath.row == 0 ) {
+        cell = [[UserInfoCell alloc] init];
+        [(UserInfoCell*)cell configureWithUser:_user];
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:kPhotoCellIdentifier
+                                           forIndexPath:indexPath];
+    }
     
     return cell;
 }
@@ -210,11 +224,15 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ( indexPath.row == 0 ) {
+        return 200;
+    }
+    
     CGFloat height = [UIScreen mainScreen].bounds.size.width;
     
     CGSize maximumTextSize = CGSizeMake([UIScreen mainScreen].bounds.size.width-10, CGFLOAT_MAX);
     
-    NSAttributedString *attributedString = [((MediaData*)_loadedData[indexPath.row]) attributedText];
+    NSAttributedString *attributedString = [((MediaData*)_loadedData[indexPath.row-1]) attributedText];
     
     CGRect textRect = [attributedString boundingRectWithSize:maximumTextSize
                                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
@@ -226,18 +244,20 @@ static NSString* const kPhotoCellIdentifier = @"PhotoCellIdentifier";
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.row == (_loadedData.count - 7) && _nextURL) {
-        [self loadNewImages];
+    if (indexPath.row > 0) {
+        if ( indexPath.row == (_loadedData.count - 7) && _nextURL) {
+            [self loadNewImages];
+        }
+        
+        [((InstagramPhotoCell *)cell).photoImgView setImageWithURL:((MediaData*)_loadedData[indexPath.row-1]).photoURL placeholderImage:[UIImage imageNamed:@"placeholder"]];
+        //NSLog(@"%@",((MediaData*)_loadedData[indexPath.row]).photoURL);
+        
+        ((InstagramPhotoCell *)cell).textView.tag = indexPath.row-1;
+        ((InstagramPhotoCell *)cell).textView.attributedText = [(MediaData*)_loadedData[indexPath.row-1] attributedText];
+        
+        ((InstagramPhotoCell *)cell).textView.userInteractionEnabled = YES;
+        [((InstagramPhotoCell *)cell).textView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnTextView:)]];
     }
-    
-    [((InstagramPhotoCell *)cell).photoImgView setImageWithURL:((MediaData*)_loadedData[indexPath.row]).photoURL placeholderImage:[UIImage imageNamed:@"placeholder"]];
-    //NSLog(@"%@",((MediaData*)_loadedData[indexPath.row]).photoURL);
-    
-    ((InstagramPhotoCell *)cell).textView.tag = indexPath.row;
-    ((InstagramPhotoCell *)cell).textView.attributedText = [(MediaData*)_loadedData[indexPath.row] attributedText];
-    
-    ((InstagramPhotoCell *)cell).textView.userInteractionEnabled = YES;
-    [((InstagramPhotoCell *)cell).textView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnTextView:)]];
 }
 
 @end

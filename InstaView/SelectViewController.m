@@ -7,14 +7,16 @@
 //
 
 #import "SelectViewController.h"
+#import "SelectView.h"
 #import "SearchViewController.h"
 #import "RecommendFollowersViewController.h"
-#import "SelectView.h"
+#import "RecentImagesViewController.h"
 #import "APIManager.h"
 
 @interface SelectViewController ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic) SelectView* selectView;
+@property (nonatomic) NSArray* optionNames;
 
 @end
 
@@ -28,17 +30,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    _optionNames = @[@"My page", @"My stream", @"Search", @"Followers manager"];
+    
     _selectView.tableView.dataSource = self;
     _selectView.tableView.delegate = self;
     
     _selectView.tableView.bounces = YES;
     
 //    self.edgesForExtendedLayout = UIRectEdgeNone;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -71,8 +70,12 @@
     UIViewController* viewController;
     
     if ( indexPath.row == 0 ) {
-        viewController = [SearchViewController new];
+        viewController = [[RecentImagesViewController alloc] initWithUserID:[[APIManager sharedManager] currentUserID]];
     } else if ( indexPath.row == 1 ) {
+        viewController = [UIViewController new];
+    } else if ( indexPath.row == 2 ) {
+        viewController = [SearchViewController new];
+    } else if ( indexPath.row == 3 ) {
         viewController = [RecommendFollowersViewController new];
     }
     
@@ -83,18 +86,15 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return _optionNames.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [UITableViewCell new];
     
-    if ( indexPath.row == 0 ) {
-        cell.textLabel.text = @"Search";
-    } else if ( indexPath.row == 1 ) {
-        cell.textLabel.text = @"Followers";
-    }
-    
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.textLabel.text = _optionNames[indexPath.row];
+
     return cell;
 }
 

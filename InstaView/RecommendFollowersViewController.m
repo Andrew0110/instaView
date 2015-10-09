@@ -141,26 +141,22 @@ static NSUInteger const kCellHeight = 60;
 }
 
 - (void)findFollowRecommendList {
-    NSMutableString* followers = [NSMutableString new];
-    for ( InstaUser* user in [self.followers allValues] ) {
-        [followers appendFormat:@"%@ ", user.username];
-    }
-    NSMutableString* follows = [NSMutableString new];
-    for ( InstaUser* user in [self.follows allValues] ) {
-        [follows appendFormat:@"%@ ", user.username];
-    }
-    NSLog(@"Followers (%lu): %@", (unsigned long)_followers.count, followers);
-    NSLog(@"Follows (%lu): %@", (unsigned long)_follows.count, follows);
-
+//    NSMutableString* followers = [NSMutableString new];
+//    for ( InstaUser* user in [self.followers allValues] ) {
+//        [followers appendFormat:@"%@ ", user.username];
+//    }
+//    NSMutableString* follows = [NSMutableString new];
+//    for ( InstaUser* user in [self.follows allValues] ) {
+//        [follows appendFormat:@"%@ ", user.username];
+//    }
+//    NSLog(@"Followers (%lu): %@", (unsigned long)_followers.count, followers);
+//    NSLog(@"Follows (%lu): %@", (unsigned long)_follows.count, follows);
     
     for ( NSString* userID in [self.followers allKeys] ) {
         if ( ![[self.follows allKeys] containsObject:userID] ) {
             [self.recommendFollowList addObject:[self.followers objectForKey:userID]];
-//            NSLog(@"%@", ((InstaUser*)[self.followers objectForKey:userID]).username);
         }
     }
-//    NSLog(@"followlist - %lu", (unsigned long)_recommendFollowList.count);
-
     
     [self.recommendFollowersView.tableView reloadData];
 }
@@ -174,7 +170,13 @@ static NSUInteger const kCellHeight = 60;
 - (void)tableView:(UITableView *)tableView
   willDisplayCell:(UITableViewCell *)cell
 forRowAtIndexPath:(NSIndexPath *)indexPath {
-    InstaUser* user = (InstaUser*)self.recommendFollowList[indexPath.row];
+    InstaUser* user;
+    if ( indexPath.section == 0 ) {
+        user = (InstaUser*)self.recommendFollowList[indexPath.row];
+    } else if ( indexPath.section == 1 ) {
+        user = (InstaUser*)self.recommendUnfollowList[indexPath.row];
+    }
+    
     [(SearchViewCell*)cell configureWithUser:user];
     if ( !user.mediaCount ) {
         __weak typeof(self) weakSelf = self;
@@ -184,14 +186,36 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if ( section == 1 ) {
+        return @"Unfollowers";
+    }
+    return @"Recommended follows";
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+}
+
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _recommendFollowList.count;
+    if ( section == 0 ) {
+        return _recommendFollowList.count;
+    }
+    return _recommendUnfollowList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SearchViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kRecommendFollowerIdentifier forIndexPath:indexPath];
+    
+    //cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    cell.accessoryType = UITableViewCellAccessoryNone;
     
     return cell;
 }
