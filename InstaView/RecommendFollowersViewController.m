@@ -171,7 +171,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     } else if ( indexPath.section == 1 ) {
         user = (InstaUser*)self.recommendUnfollowList[indexPath.row];
     }
-    [(SearchViewCell*)cell configureWithUser:user];
     if ( !user.mediaCount ) {
         __weak typeof(self) weakSelf = self;
         [_manager getUserInfoWithUser:user completion:^() {
@@ -211,6 +210,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SearchViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kRecommendFollowerIdentifier forIndexPath:indexPath];
+    
+    InstaUser* user;
+    if ( indexPath.section == 0 ) {
+        user = (InstaUser*)self.recommendFollowList[indexPath.row];
+    } else if ( indexPath.section == 1 ) {
+        user = (InstaUser*)self.recommendUnfollowList[indexPath.row];
+    }
+    [(SearchViewCell*)cell configureWithUser:user];
     
     //cell.accessoryType = UITableViewCellAccessoryCheckmark;
     cell.accessoryType = UITableViewCellAccessoryNone;

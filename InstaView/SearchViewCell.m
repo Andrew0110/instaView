@@ -15,7 +15,6 @@
 @property (nonatomic) UILabel     *label;
 @property (nonatomic) UILabel     *detailedInfoLabel;
 
-
 @end
 
 @implementation SearchViewCell
@@ -53,7 +52,7 @@
     if (aUser.mediaCount) {
         _detailedInfoLabel.text = [NSString stringWithFormat:@"Posts:%ld Followers:%ld", (long)aUser.mediaCount, (long)aUser.followersCount];
     } else {
-        _detailedInfoLabel.text = @"Posts:0 Followers:0";
+        _detailedInfoLabel.text = @"";
     }
     
 }
